@@ -1,0 +1,84 @@
+{
+  "built_at": "2026-09-30T10:28:58+00:00",
+  "sources": {
+    "mc_catalog:/home/claude/dalil-ai/data/raw/official/mc/mc_services_capture.json": {
+      "loaded": 75,
+      "accepted": 73
+    },
+    "saved_pages:/home/claude/dalil-ai/data/raw/manual": {
+      "loaded": 0,
+      "accepted": 0
+    },
+    "legacy_seed_csv:/home/claude/dalil-ai/data/raw/seed/services_seed_v0.csv": {
+      "loaded": 18,
+      "accepted": 0
+    }
+  },
+  "services_indexed": 73,
+  "services_quarantined": 20,
+  "duplicates_removed": 0,
+  "agencies": [
+    "Ministry of Commerce"
+  ],
+  "page_labels_en": {
+    "Merchant": 55,
+    "Brand Names": 5,
+    "Business sector": 44,
+    "Commercial Register": 27,
+    "Proactive": 8,
+    "consumer": 3,
+    "Commercial Fraud": 2,
+    "commercial report": 2,
+    "companies": 11,
+    "business sector": 20,
+    "The merchant": 1,
+    "Installations": 1,
+    "commercial agencies": 5,
+    "Companies": 8,
+    "Business Sector": 1,
+    "Investor": 1,
+    "Consumer": 1,
+    "Consulting professions": 8,
+    "Precious metals": 1,
+    "laboratories": 1,
+    "career": 1,
+    "vocational": 1,
+    "Commercial Registration Data": 1
+  },
+  "source_domains": [
+    "mc.gov.sa"
+  ],
+  "with_arabic": 73,
+  "with_english": 73,
+  "field_coverage": {
+    "title_en": 73,
+    "title_ar": 73,
+    "category_en": 73,
+    "category_ar": 73,
+    "description_en": 73,
+    "description_ar": 73,
+    "eligibility_en": 0,
+    "eligibility_ar": 0,
+    "requirements_en": 73,
+    "requirements_ar": 73,
+    "required_documents_en": 73,
+    "required_documents_ar": 73,
+    "steps_en": 73,
+    "steps_ar": 73,
+    "fees_en": 73,
+    "fees_ar": 73,
+    "processing_time_en": 73,
+    "processing_time_ar": 73,
+    "target_audience_en": 73,
+    "target_audience_ar": 73,
+    "service_languages_en": 73,
+    "service_languages_ar": 73,
+    "source_last_modified_en": 73,
+    "source_last_modified_ar": 73
+  },
+  "warnings": {},
+  "date_collected_range": [
+    "2026-09-30T10:07:45.854Z",
+    "2026-09-30T10:22:20.313Z"
+  ]
+}
