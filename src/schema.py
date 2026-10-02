@@ -29,6 +29,7 @@ BILINGUAL_FIELDS = [
     "processing_time",
     "target_audience",
     "service_languages",
+    "notes",
     "official_url",
     "source_last_modified",
 ]
@@ -90,6 +91,8 @@ class ServiceRecord:
     target_audience_ar: Optional[str] = None
     service_languages_en: Optional[str] = None
     service_languages_ar: Optional[str] = None
+    notes_en: Optional[str] = None
+    notes_ar: Optional[str] = None
     official_url_en: Optional[str] = None
     official_url_ar: Optional[str] = None
     source_last_modified_en: Optional[str] = None

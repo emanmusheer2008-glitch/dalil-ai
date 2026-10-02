@@ -8,9 +8,12 @@ from tests.conftest import fake_encode, make_record
 
 
 def test_chunks_only_for_present_sections_and_keep_metadata(records):
+    assert {c["section"] for c in record_to_chunks(records[0], include_title=False)} == {
+        "overview", "steps", "service_facts"}
     chunks = record_to_chunks(records[0])
     sections = {(c["lang"], c["section"]) for c in chunks}
-    assert sections == {("en", "overview"), ("en", "steps"), ("en", "service_facts"), ("ar", "overview")}
+    assert sections == {("en", "title"), ("en", "overview"), ("en", "steps"), ("en", "service_facts"),
+                        ("ar", "title"), ("ar", "overview")}
     for c in chunks:
         assert c["service_id"] == "mc-1"
         assert c["official_url"].startswith("https://mc.gov.sa/")

@@ -1,0 +1,130 @@
+query_id,query,language,query_type,supported,split,expected_service_id,top1_service_id,top3_service_ids,top_score,second_score,rank,strict_rank,refused
+q001,I want to reserve a name for my new business,en,paraphrase,1,calibration,mc-1,mc-1,mc-1;mc-34;mc-22,0.4062844514846802,0.38706839084625244,1.0,1.0,True
+q002,أبغى أحجز اسم تجاري لمشروعي الجديد,ar,paraphrase,1,calibration,mc-1,mc-36,mc-36;mc-34;mc-22,0.36010342836380005,0.3443092107772827,4.0,4.0,True
+q003,"My trade name reservation is about to expire, can I extend it?",en,paraphrase,1,test,mc-34,mc-34,mc-34;mc-22;mc-1,0.5079158544540405,0.3661423921585083,1.0,1.0,False
+q004,كيف أمدد حجز الاسم التجاري قبل ما ينتهي؟,ar,paraphrase,1,test,mc-34,mc-34,mc-34;mc-22;mc-12,0.4384014904499054,0.4056698977947235,1.0,1.0,False
+q005,How do I cancel a business name I reserved?,en,paraphrase,1,calibration,mc-22,mc-22,mc-22;mc-12;mc-77,0.5270040035247803,0.3758090138435364,1.0,1.0,False
+q006,أبي ألغي حجز اسم تجاري حجزته,ar,paraphrase,1,calibration,mc-22,mc-34,mc-34;mc-22;mc-1,0.4361797571182251,0.3960837125778198,2.0,2.0,False
+q007,How do I register a commercial registration for a sole proprietorship?,en,paraphrase,1,test,mc-38,mc-13,mc-13;mc-6;mc-38,0.6165832281112671,0.6046814918518066,3.0,3.0,False
+q008,كيف أطلع سجل تجاري لمؤسسة فردية؟,ar,paraphrase,1,test,mc-38,mc-73,mc-73;mc-68;mc-6,0.4736342132091522,0.4533635377883911,6.0,6.0,False
+q009,Do I need to confirm my sole proprietorship's commercial registry data every year?,en,paraphrase,1,calibration,mc-15,mc-6,mc-6;mc-13;mc-15,0.5215976238250732,0.5078180432319641,3.0,3.0,False
+q010,التأكيد السنوي لبيانات السجل التجاري للمؤسسة كم رسومه؟,ar,paraphrase,1,calibration,mc-15,mc-15,mc-15;mc-11;mc-2,0.6368274092674255,0.5304471254348755,1.0,1.0,False
+q011,I closed my shop for good. How do I cancel my establishment's commercial registration?,en,hard,1,test,mc-68,mc-12,mc-12;mc-68;mc-62,0.399429589509964,0.3888554573059082,2.0,2.0,True
+q012,كيف أشطب السجل التجاري لمؤسستي الفردية؟,ar,hard,1,test,mc-68,mc-73,mc-73;mc-13;mc-6,0.4736853837966919,0.46809232234954834,6.0,6.0,False
+q013,I'm selling my one-person business to someone else. How do I move the registry into their name?,en,hard,1,calibration,mc-36,mc-36,mc-36;mc-37;mc-73,0.35141056776046753,0.33218124508857727,1.0,1.0,True
+q014,أبغى أنقل ملكية سجل مؤسستي لشخص ثاني,ar,hard,1,calibration,mc-36,mc-36,mc-36;mc-61;mc-24,0.31908395886421204,0.2251405268907547,1.0,1.0,True
+q015,Where can I get an official extract of a commercial registration?,en,paraphrase,1,test,mc-33,mc-33,mc-33;mc-13;mc-91,0.5051707029342651,0.45487505197525024,1.0,1.0,False
+q016,أحتاج مستخرج سجل تجاري أو إفادة تجارية,ar,paraphrase,1,test,mc-33,mc-33,mc-33;mc-32;mc-41,0.5518760681152344,0.2848019599914551,1.0,1.0,False
+q017,Look up a company's details using its commercial registration number,en,paraphrase,1,calibration,mc-91,mc-13,mc-13;mc-91;mc-2,0.44265466928482056,0.41892820596694946,2.0,2.0,False
+q018,أبغى أستعلم عن بيانات سجل تجاري لشركة,ar,paraphrase,1,calibration,mc-91,mc-91,mc-91;mc-9;mc-67,0.4338285028934479,0.39083296060562134,1.0,1.0,False
+q019,Steps to set up a limited liability company in Saudi Arabia,en,paraphrase,1,test,mc-99,mc-99,mc-99;mc-23;mc-20,0.5497118234634399,0.37971678376197815,1.0,1.0,False
+q020,خطوات تأسيس شركة ذات مسؤولية محدودة,ar,paraphrase,1,test,mc-99,mc-99,mc-99;mc-20;mc-23,0.5511642694473267,0.4143246114253998,1.0,1.0,False
+q021,How do I establish a simple company?,en,paraphrase,1,calibration,mc-98,mc-98,mc-98;mc-23;mc-20,0.4474596679210663,0.34842896461486816,1.0,1.0,False
+q022,تأسيس شركة توصية بسيطة,ar,paraphrase,1,calibration,mc-98,mc-98,mc-98;mc-20;mc-23,0.5040208101272583,0.3821852505207062,1.0,1.0,False
+q023,What are the requirements to incorporate a joint stock company?,en,paraphrase,1,test,mc-92,mc-92,mc-92;mc-94;mc-82,0.43612346053123474,0.4256824254989624,1.0,1.0,False
+q024,كيف أأسس شركة مساهمة؟,ar,paraphrase,1,test,mc-92,mc-20,mc-20;mc-52;mc-23,0.40803712606430054,0.39085209369659424,8.0,9.0,True
+q025,What do I need to start a simplified joint stock company?,en,paraphrase,1,calibration,mc-94,mc-94,mc-94;mc-92;mc-82,0.4354063868522644,0.3795209527015686,1.0,1.0,False
+q026,تأسيس شركة مساهمة مبسطة,ar,paraphrase,1,calibration,mc-94,mc-20,mc-20;mc-82;mc-23,0.46695488691329956,0.46630311012268066,4.0,4.0,False
+q027,Two partners want to form a general partnership where both are fully liable. How?,en,hard,1,test,mc-97,mc-20,mc-20;mc-99;mc-23,0.3010718822479248,0.2983684539794922,6.0,6.0,True
+q028,تأسيس شركة تضامن,ar,hard,1,test,mc-97,mc-97,mc-97;mc-98;mc-20,0.43196260929107666,0.30176854133605957,1.0,1.0,False
+q029,I'm a foreign investor with an investment license. How do I establish my company?,en,paraphrase,1,calibration,mc-20,mc-20,mc-20;mc-62;mc-9,0.5742785930633545,0.4259641766548157,1.0,1.0,False
+q030,تأسيس شركة بموجب ترخيص استثماري,ar,paraphrase,1,calibration,mc-20,mc-20,mc-20;mc-23;mc-2,0.7360110282897949,0.4854336082935333,1.0,1.0,False
+q031,Can I convert my sole proprietorship into a company?,en,paraphrase,1,test,mc-52,mc-73,mc-73;mc-6;mc-52,0.47058016061782837,0.4525824189186096,3.0,3.0,False
+q032,تحويل المؤسسة الفردية إلى شركة,ar,paraphrase,1,test,mc-52,mc-52,mc-52;mc-68;mc-73,0.5694214105606079,0.3281593918800354,1.0,1.0,False
+q033,How can a company manager allow an employee to handle the company's transactions online on his behalf?,en,hard,1,calibration,mc-16,mc-19,mc-19;mc-16;mc-150,0.3421589136123657,0.29086875915527344,2.0,2.0,True
+q034,كيف أفوض شخص ينجز معاملات منشأتي إلكترونيًا؟,ar,hard,1,calibration,mc-16,mc-19,mc-19;mc-77;mc-61,0.44167816638946533,0.3134993314743042,4.0,4.0,False
+q035,How can I check that a certificate of origin issued by the ministry is genuine?,en,paraphrase,1,test,mc-25,mc-25,mc-25;mc-47;mc-33,0.36225998401641846,0.3308669924736023,1.0,1.0,True
+q036,التحقق من صحة مستند صادر من وزارة التجارة,ar,paraphrase,1,test,mc-25,mc-25,mc-25;mc-151;mc-70,0.45270484685897827,0.33748573064804077,1.0,1.0,False
+q037,I became the exclusive distributor of a foreign brand. How do I register the agency?,en,hard,1,calibration,mc-41,mc-41,mc-41;mc-44;mc-43,0.39441293478012085,0.3931030035018921,1.0,1.0,True
+q038,تسجيل وكالة تجارية جديدة,ar,hard,1,calibration,mc-41,mc-41,mc-41;mc-43;mc-42,0.4781494140625,0.3307570517063141,1.0,1.0,False
+q039,Renew my commercial agency registration,en,paraphrase,1,test,mc-43,mc-41,mc-41;mc-43;mc-13,0.4895610213279724,0.48819518089294434,2.0,2.0,False
+q040,تجديد قيد وكالة تجارية,ar,paraphrase,1,test,mc-43,mc-43,mc-43;mc-41;mc-49,0.4703446626663208,0.4258298873901367,1.0,1.0,False
+q041,Who is the official registered agent for a brand in Saudi Arabia?,en,hard,1,calibration,mc-18,mc-41,mc-41;mc-44;mc-38,0.3981044292449951,0.36309242248535156,45.0,45.0,True
+q042,أبغى أعرف مين الوكيل المعتمد لعلامة تجارية,ar,hard,1,calibration,mc-18,mc-44,mc-44;mc-18;mc-30,0.35716113448143005,0.30522239208221436,2.0,2.0,True
+q043,"As the agent, how do I write off a commercial agency?",en,paraphrase,1,test,mc-44,mc-44,mc-44;mc-41;mc-42,0.5608446598052979,0.3715810477733612,1.0,1.0,False
+q044,شطب وكالة تجارية من قبل الوكيل,ar,paraphrase,1,test,mc-44,mc-44,mc-44;mc-41;mc-42,0.6035224795341492,0.43205225467681885,1.0,1.0,False
+q045,Change the details of a registered commercial agency,en,paraphrase,1,calibration,mc-42,mc-41,mc-41;mc-42;mc-43,0.5082266926765442,0.4530925154685974,2.0,2.0,False
+q046,تعديل بيانات وكالة تجارية مسجلة,ar,paraphrase,1,calibration,mc-42,mc-42,mc-42;mc-11;mc-9,0.4414595365524292,0.41182881593704224,1.0,1.0,False
+q047,Do I need permission to run a discount sale in my store?,en,hard,1,test,mc-46,mc-46,mc-46;mc-36;mc-55,0.39416322112083435,0.23198705911636353,1.0,1.0,True
+q048,أبغى أسوي تخفيضات في محلي، هل أحتاج ترخيص؟,ar,hard,1,test,mc-46,mc-46,mc-46;mc-51;mc-75,0.3713487982749939,0.2922171354293823,1.0,1.0,True
+q049,How do I register a franchise?,en,paraphrase,1,calibration,mc-24,mc-24,mc-24;mc-14;mc-6,0.525985836982727,0.30255210399627686,1.0,1.0,False
+q050,تسجيل امتياز تجاري (فرنشايز),ar,paraphrase,1,calibration,mc-24,mc-24,mc-24;mc-41;mc-14,0.5360766649246216,0.3472965657711029,1.0,1.0,False
+q051,Report a franchisor who broke the franchise law,en,paraphrase,1,test,mc-14,mc-24,mc-24;mc-14;mc-55,0.38646459579467773,0.38020116090774536,2.0,2.0,True
+q052,بلاغ عن مخالفة نظام الامتياز التجاري,ar,paraphrase,1,test,mc-14,mc-14,mc-14;mc-24;mc-151,0.6063319444656372,0.48208433389663696,1.0,1.0,False
+q053,Report a shop that is secretly run by a foreigner under a Saudi citizen's name,en,hard,1,calibration,mc-10,mc-10,mc-10;mc-55;mc-17,0.34324705600738525,0.3109900951385498,1.0,1.0,True
+q054,الإبلاغ عن حالة تستر تجاري,ar,hard,1,calibration,mc-10,mc-10,mc-10;mc-55;mc-151,0.4363521933555603,0.4111635386943817,1.0,1.0,False
+q055,A store refused to refund me. Where do I file a complaint?,en,hard,1,test,mc-55,mc-55,mc-55;mc-17;mc-151,0.38646626472473145,0.308523952960968,1.0,1.0,True
+q056,أبي أقدم شكوى على متجر ما رجع لي فلوسي,ar,hard,1,test,mc-55,mc-55,mc-55;mc-17;mc-151,0.2753179669380188,0.1837502270936966,1.0,1.0,True
+q057,Check whether a product I bought has been recalled as defective,en,paraphrase,1,calibration,mc-30,mc-30,mc-30;mc-55;mc-2,0.4611622989177704,0.21043315529823303,1.0,1.0,False
+q058,الاستعلام عن المنتجات المعيبة,ar,paraphrase,1,calibration,mc-30,mc-30,mc-30;mc-19;mc-91,0.7319116592407227,0.4029100835323334,1.0,1.0,False
+q059,How do I check if my business has immediate violations?,en,paraphrase,1,test,mc-5,mc-5,mc-5;mc-151;mc-17,0.38851797580718994,0.357979416847229,1.0,1.0,True
+q060,الاستعلام عن المخالفات الفورية على منشأتي,ar,paraphrase,1,test,mc-5,mc-5,mc-5;mc-19;mc-152,0.6501398682594299,0.363259881734848,1.0,1.0,False
+q061,I want to object to a violation decision issued against my company,en,paraphrase,1,calibration,mc-3,mc-3,mc-3;mc-17;mc-151,0.47251683473587036,0.36647728085517883,1.0,1.0,False
+q062,أبغى أعترض على قرار مخالفة صدر على شركتي,ar,paraphrase,1,calibration,mc-3,mc-3,mc-3;mc-17;mc-152,0.3351072072982788,0.28961655497550964,1.0,1.0,True
+q063,Track the status of a request I submitted to the Ministry of Commerce,en,paraphrase,1,test,mc-19,mc-55,mc-55;mc-17;mc-14,0.4269507825374603,0.36314061284065247,4.0,4.0,False
+q064,متابعة حالة طلب قدمته لوزارة التجارة,ar,paraphrase,1,test,mc-19,mc-55,mc-55;mc-41;mc-25,0.3735608756542206,0.34319785237312317,25.0,25.0,True
+q065,How do I verify that a consultant is licensed to practise?,en,paraphrase,1,calibration,mc-65,mc-65,mc-65;mc-47;mc-76,0.4306890368461609,0.3204585611820221,1.0,1.0,False
+q066,البحث عن المرخص لهم بمزاولة المهن الاستشارية,ar,paraphrase,1,calibration,mc-65,mc-65,mc-65;mc-50;mc-49,0.5019922852516174,0.40534040331840515,1.0,1.0,False
+q067,Issue a new license to practise a consulting profession,en,paraphrase,1,test,mc-47,mc-65,mc-65;mc-49;mc-50,0.5397928357124329,0.5300369262695312,2.0,7.0,False
+q068,إصدار ترخيص مهني جديد,ar,paraphrase,1,test,mc-47,mc-77,mc-77;mc-76;mc-75,0.4465770125389099,0.4160500764846802,4.0,9.0,False
+q069,My professional license expired. How do I renew it?,en,paraphrase,1,calibration,mc-49,mc-49,mc-49;mc-51;mc-76,0.5172162055969238,0.42043712735176086,1.0,1.0,False
+q070,تجديد الترخيص المهني,ar,paraphrase,1,calibration,mc-49,mc-49,mc-49;mc-76;mc-75,0.579547107219696,0.49271488189697266,1.0,1.0,False
+q071,I want to open a gold and jewellery shop. What license do I need?,en,hard,1,test,mc-60,mc-60,mc-60;mc-46;mc-70,0.2841266393661499,0.2712146043777466,1.0,1.0,True
+q072,ترخيص محل ذهب ومجوهرات,ar,hard,1,test,mc-60,mc-75,mc-75;mc-77;mc-46,0.30035391449928284,0.2822922170162201,18.0,18.0,True
+q073,Permit to import non-hazardous chemicals,en,paraphrase,1,calibration,mc-63,mc-63,mc-63;mc-31;mc-60,0.7304837703704834,0.2215266078710556,1.0,1.0,False
+q074,تصريح استيراد مواد كيميائية غير خطرة,ar,paraphrase,1,calibration,mc-63,mc-63,mc-63;mc-60;mc-27,0.5879486799240112,0.1907798945903778,1.0,1.0,False
+q075,Where do I declare the real beneficial owners of my company?,en,paraphrase,1,test,mc-35,mc-35,mc-35;mc-150;mc-13,0.35796934366226196,0.31019437313079834,1.0,1.0,True
+q076,الإفصاح عن المستفيد الحقيقي للشركة,ar,paraphrase,1,test,mc-35,mc-35,mc-35;mc-61;mc-150,0.3936278223991394,0.3511772155761719,1.0,1.0,True
+q077,How can I vote online in chamber of commerce elections?,en,paraphrase,1,calibration,mc-32,mc-32,mc-32;mc-7;mc-3,0.4328101575374603,0.24526090919971466,1.0,1.0,False
+q078,التصويت الإلكتروني في انتخابات الغرف التجارية,ar,paraphrase,1,calibration,mc-32,mc-32,mc-32;mc-7;mc-16,0.5970587730407715,0.28970053791999817,1.0,1.0,False
+q079,Update the list of shareholders in the company's records,en,paraphrase,1,test,mc-66,mc-66,mc-66;mc-150;mc-94,0.5952455997467041,0.5659815669059753,1.0,1.0,False
+q080,تحديث سجل المساهمين في الشركة,ar,paraphrase,1,test,mc-66,mc-66,mc-66;mc-150;mc-82,0.7211599349975586,0.43790915608406067,1.0,1.0,False
+q081,Amend the company's articles of association,en,paraphrase,1,calibration,mc-82,mc-82,mc-82;mc-27;mc-28,0.6513213515281677,0.4282546639442444,1.0,1.0,False
+q082,تعديل عقد تأسيس الشركة,ar,paraphrase,1,calibration,mc-82,mc-82,mc-82;mc-9;mc-67,0.4273630380630493,0.4112606644630432,1.0,1.0,False
+q083,Submit the results of the company's general assembly meeting,en,paraphrase,1,test,mc-7,mc-7,mc-7;mc-27;mc-28,0.6436273455619812,0.5327931642532349,1.0,1.0,False
+q084,رفع نتائج اجتماع الجمعية العامة,ar,paraphrase,1,test,mc-7,mc-7,mc-7;mc-27;mc-28,0.4826377034187317,0.46255791187286377,1.0,1.0,False
+q085,My establishment's commercial registration was suspended. How do I lift the suspension?,en,paraphrase,1,calibration,mc-62,mc-9,mc-9;mc-67;mc-62,0.5251063704490662,0.5181134939193726,1.0,3.0,False
+q086,رفع تعليق السجل التجاري لمؤسسة فردية,ar,paraphrase,1,calibration,mc-62,mc-62,mc-62;mc-73;mc-9,0.6086971759796143,0.5398974418640137,1.0,1.0,False
+q087,Update the owner's personal information on the commercial registration,en,paraphrase,1,test,mc-13,mc-13,mc-13;mc-61;mc-36,0.5897873640060425,0.4744100570678711,1.0,1.0,False
+q088,تحديث بيانات مالك السجل التجاري,ar,paraphrase,1,test,mc-13,mc-13,mc-13;mc-61;mc-40,0.7243406176567078,0.5850703716278076,1.0,1.0,False
+q089,كيف أسجل LLC في السعودية؟,mixed,mixed_language,1,calibration,mc-99,mc-61,mc-61;mc-41;mc-97,0.37346816062927246,0.356889933347702,9.0,9.0,True
+q090,annual confirmation للسجل التجاري حق المؤسسة,mixed,mixed_language,1,test,mc-15,mc-15,mc-15;mc-2;mc-11,0.5060567855834961,0.44335615634918213,1.0,1.0,False
+q091,تجديد commercial agency,mixed,mixed_language,1,calibration,mc-43,mc-43,mc-43;mc-42;mc-41,0.47167906165122986,0.4453064799308777,1.0,1.0,False
+q092,franchise registration وش المطلوب؟,mixed,mixed_language,1,test,mc-24,mc-24,mc-24;mc-91;mc-13,0.5888305306434631,0.3080717921257019,1.0,1.0,False
+q093,how to قيد سجل تجاري لمؤسسة فردية,mixed,mixed_language,1,calibration,mc-38,mc-68,mc-68;mc-38;mc-73,0.4656205177307129,0.4637642502784729,2.0,2.0,False
+q094,What's the best pizza in Riyadh?,en,out_of_domain,0,calibration,,mc-41,mc-41;mc-43;mc-14,0.1607985943555832,0.14663630723953247,,,True
+q095,Who will win the football match tonight?,en,out_of_domain,0,test,,mc-32,mc-32;mc-51;mc-31,0.0737263634800911,0.06059580296278,,,True
+q096,Write my university application essay for me.,en,out_of_domain,0,calibration,,mc-44,mc-44;mc-48;mc-31,0.27309685945510864,0.2185436487197876,,,True
+q097,What is 15 times 23?,en,out_of_domain,0,test,,mc-27,mc-27;mc-43;mc-82,0.1373468041419983,0.10284921526908875,,,True
+q098,Tell me a joke,en,out_of_domain,0,calibration,,mc-26,mc-26;mc-55;mc-1,0.08489618450403214,0.08481521904468536,,,True
+q099,Best hotels to stay in AlUla,en,out_of_domain,0,test,,mc-31,mc-31;mc-35;mc-10,0.09670957177877426,0.09259265661239624,,,True
+q100,Translate this sentence into French,en,out_of_domain,0,calibration,,mc-31,mc-31;mc-52;mc-19,0.11906031519174576,0.1151648759841919,,,True
+q101,كيف الطقس في جدة بكرة؟,ar,out_of_domain,0,calibration,,mc-1,mc-1;mc-28;mc-68,0.07389424741268158,0.06948418915271759,,,True
+q102,طريقة عمل الكبسة,ar,out_of_domain,0,test,,mc-28,mc-28;mc-43;mc-75,0.18761932849884033,0.18692730367183685,,,True
+q103,أفضل جوال أشتريه هالسنة,ar,out_of_domain,0,calibration,,mc-30,mc-30;mc-60;mc-15,0.10950028896331787,0.09699422121047974,,,True
+q104,من هو أفضل لاعب في الدوري السعودي؟,ar,out_of_domain,0,test,,mc-41,mc-41;mc-10;mc-17,0.29553020000457764,0.24469739198684692,,,True
+q105,كيف أتعلم البرمجة من الصفر؟,ar,out_of_domain,0,calibration,,mc-91,mc-91;mc-35;mc-19,0.11463883519172668,0.11452634632587433,,,True
+q106,How do I renew my passport?,en,not_indexed,0,calibration,,mc-49,mc-49;mc-43;mc-17,0.2886228561401367,0.23478829860687256,,,True
+q107,How can I renew my driving licence?,en,not_indexed,0,test,,mc-49,mc-49;mc-76;mc-50,0.3881283700466156,0.2382667511701584,,,True
+q108,How do I apply for a Hajj permit?,en,not_indexed,0,calibration,,mc-31,mc-31;mc-63;mc-47,0.2738055884838104,0.24247828125953674,,,True
+q109,How can I get my foreign university degree recognized in Saudi Arabia?,en,not_indexed,0,test,,mc-47,mc-47;mc-41;mc-48,0.36129486560821533,0.2825477421283722,,,True
+q110,Book an appointment at a Ministry of Health primary care centre,en,not_indexed,0,calibration,,mc-65,mc-65;mc-38;mc-76,0.20820537209510803,0.2060844600200653,,,True
+q111,How do I apply for a tourist e-visa to Saudi Arabia?,en,not_indexed,0,test,,mc-41,mc-41;mc-31;mc-47,0.3216024339199066,0.3055739104747772,,,True
+q112,How do I register my national address?,en,not_indexed,0,calibration,,mc-70,mc-70;mc-38;mc-13,0.3176526427268982,0.3169131577014923,,,True
+q113,University admission requirements for King Saud University,en,not_indexed,0,test,,mc-47,mc-47;mc-48;mc-52,0.27071845531463623,0.2358337640762329,,,True
+q114,How do I register my company for VAT?,en,not_indexed,0,calibration,,mc-99,mc-99;mc-98;mc-92,0.34953850507736206,0.338712215423584,,,True
+q115,How do I issue work visas for my company's foreign employees?,en,not_indexed,0,test,,mc-40,mc-40;mc-67;mc-9,0.28745579719543457,0.28515157103538513,,,True
+q116,How do I get a municipal (Balady) license for my shop?,en,not_indexed,0,calibration,,mc-60,mc-60;mc-46;mc-5,0.2929176688194275,0.29220691323280334,,,True
+q117,كيف أجدد جواز السفر؟,ar,not_indexed,0,calibration,,mc-17,mc-17;mc-31;mc-10,0.25737884640693665,0.25725507736206055,,,True
+q118,تجديد الإقامة للعمالة,ar,not_indexed,0,test,,mc-49,mc-49;mc-43;mc-76,0.29362383484840393,0.2480907142162323,,,True
+q119,كيف أسدد المخالفات المرورية؟,ar,not_indexed,0,calibration,,mc-5,mc-5;mc-151;mc-152,0.3684650659561157,0.29711660742759705,,,True
+q120,كيف أعادل شهادتي الجامعية من خارج السعودية؟,ar,not_indexed,0,test,,mc-47,mc-47;mc-31;mc-41,0.3422467112541199,0.3036035895347595,,,True
+q121,كيف أسجل في الضمان الاجتماعي؟,ar,not_indexed,0,calibration,,mc-48,mc-48;mc-47;mc-15,0.3218432068824768,0.29275423288345337,,,True
+q122,كيف أصدر هوية وطنية لأول مرة؟,ar,not_indexed,0,test,,mc-17,mc-17;mc-14;mc-10,0.24745622277259827,0.22834090888500214,,,True
+q123,تسجيل المنشأة في التأمينات الاجتماعية,ar,not_indexed,0,calibration,,mc-47,mc-47;mc-48;mc-10,0.41979119181632996,0.3925720453262329,,,True
+q124,إصدار رخصة بلدي للمحل,ar,not_indexed,0,test,,mc-60,mc-60;mc-5;mc-63,0.2912748456001282,0.28383415937423706,,,True
+q125,حجز موعد في مستشفى حكومي,ar,not_indexed,0,calibration,,mc-27,mc-27;mc-1;mc-15,0.20773988962173462,0.20494946837425232,,,True
+q126,Temporary permit for food trucks serving pilgrims during the season,en,not_indexed,0,test,,mc-63,mc-63;mc-31;mc-61,0.2415313422679901,0.21677343547344208,,,True
+q127,تصاريح موسمية لمركبات الإعاشة,ar,not_indexed,0,test,,mc-31,mc-31;mc-30;mc-51,0.28226906061172485,0.14003342390060425,,,True
+q128,How do I get a license for a laboratory?,en,not_indexed,0,calibration,,mc-63,mc-63;mc-47;mc-76,0.30714815855026245,0.22090600430965424,,,True
+q129,إصدار رخصة مختبر,ar,not_indexed,0,calibration,,mc-63,mc-63;mc-60;mc-20,0.371428906917572,0.2807292640209198,,,True

@@ -1,18 +1,21 @@
-# CV / application wording (truthful — every number is in `data/evaluation/results.json`)
+# CV wording (final, V2)
 
-**Dalil AI — Bilingual Arabic–English Public-Service Information Assistant**
-*Independent AI Engineering Project | 2026*
+Every number below is from the executed final evaluation (`data/evaluation/results_v2.json`, held-out test split) or the build report.
 
-- Built and evaluated a multilingual semantic retrieval system that answers Arabic and English questions over 73 official Saudi Ministry of Commerce e-services, returning official text with source citations and declining questions outside its verified corpus.
-- Engineered a provenance-tracked data pipeline (capture → parsing → Unicode/Arabic normalisation → validation → de-duplication → quarantine) producing a bilingual knowledge base with official English and Arabic text for every indexed service; unverifiable records were quarantined rather than used.
-- Compared lexical (TF-IDF character n-grams), dense (multilingual sentence embeddings) and hybrid retrieval on a 129-question Arabic/English benchmark with a calibration/test split; the selected hybrid reached 69.6% Top-1, 82.6% Top-3 and 0.78 MRR on held-out questions.
-- Showed that multilingual embeddings enable cross-lingual retrieval where keyword search fails (Arabic questions against English-only text: 59.1% vs 2.3% Top-1).
-- Implemented calibrated refusal that declined 100% of held-out unanswerable questions (including real government services not in the corpus), and documented its cost: only half of answerable held-out questions were answered correctly.
-- Delivered a tested, zero-cost Streamlit application with right-to-left Arabic support, cached embeddings (~19 ms mean query latency on CPU) and 50+ automated tests.
+**Project title**
+Dalil AI — Bilingual Saudi Public-Service Retrieval Assistant
 
-**Short version (one line):**
-Built a bilingual Arabic–English retrieval-grounded assistant over official Saudi public-service data with provenance tracking, hybrid multilingual retrieval (0.78 MRR on held-out questions) and calibrated refusal.
+**One-line description**
+An Arabic–English assistant that answers natural questions about Saudi government services using only verbatim official text from 799 services across 10 agencies, with citations and calibrated refusal.
 
-**Skills line:** Python · NLP · multilingual embeddings (sentence-transformers) · information retrieval · scikit-learn · pandas/NumPy · evaluation design · Arabic text processing · Streamlit · pytest · data provenance / responsible AI
+**CV bullets (exactly two)**
+- Built a bilingual retrieval-grounded assistant over 799 official Saudi e-services from 10 government agencies (captured, parsed and validated from source-specific HTML with full provenance), combining multilingual embeddings, character-n-gram TF-IDF and title-coverage ranking. It reached 81.7% Top-1 / 93.3% Top-3 retrieval (MRR 0.884) on a held-out 250-question Arabic/English benchmark, up from 70.0% / 84.2% for the V1 method.
+- Designed a leakage-checked evaluation (dev/val/test by paraphrase family, vocabulary frozen before new test questions) and a calibrated answer / possible-match / decline policy that cut false refusals from 26.7% to 17.5% with 91.9% of confident answers correct. Also profiled and cached the pipeline (cold start 8.7 s → 4.7 s, ~90 ms per answer) at $0 running cost, with 90 automated tests.
 
-**Do not claim:** "covers all Saudi government services", "generative RAG / LLM-powered", "official government tool", or any accuracy figure not in `results.json`. If you re-run the evaluation, update the numbers here.
+**GitHub description (≤ 350 characters)**
+Bilingual (Arabic–English) retrieval-grounded assistant for official Saudi public-service information: 799 services from 10 agencies, hybrid multilingual retrieval, calibrated refusal, verbatim-grounded answers with citations. Streamlit app, leakage-checked evaluation, 90 tests. Independent educational project, not a government service.
+
+**Portfolio-site description**
+Dalil (دليل, "guide") lets people ask about Saudi government services in their own words, in Arabic or English, instead of searching ministry websites. It finds the matching official services across 10 agencies and shows a structured answer built only from official text, with sources, or says honestly when it doesn't know. I built the full pipeline: polite data capture, a parser for ten different government website layouts, hybrid multilingual retrieval, a calibrated three-way answer policy and a leakage-checked evaluation (81.7% Top-1 on held-out questions).
+
+*Wording to avoid:* "covers all government services", "100% accurate", "RAG chatbot / generative AI", any implied official affiliation.

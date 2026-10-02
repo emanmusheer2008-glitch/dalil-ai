@@ -1,0 +1,202 @@
+# Dalil AI — Full Handover (V1 complete, V2 in progress)
+
+Date: 1 Oct 2026. This document explains everything that was done, what every file is, what the downloaded capture files are, and exactly how to continue. The prompt at the end can be handed to another AI assistant (e.g. ChatGPT).
+
+---
+
+## 1. Where things are
+
+| Location | What it is |
+|---|---|
+| `C:\Users\shams\Desktop\dalil-ai\` | **V1 — finished and working.** Git repo, 1 commit. Run with `streamlit run app.py`. 52 tests pass + 1 known failure. Old prototype files are in `_old_v0\`. |
+| `C:\Users\shams\Desktop\dalil-ai\v2_work_in_progress\` | **V2 — code complete, not yet evaluated.** Contains all new V2 code, tests, benchmark and this handover. It does not contain the new government data yet (see §3). |
+| Other laptop → `Downloads\dalil_v2_*.json` | **The new official data** (9 files) captured in that laptop's Chrome. They must be copied into V2 (see §3). |
+
+---
+
+## 2. What V1 is (done)
+
+- **Data:** 73 Ministry of Commerce e-services (official English + Arabic text), captured from mc.gov.sa with provenance (URL, capture time, SHA-256 hash of the page).
+  - The 18 hand-written prototype records were quarantined because they couldn't be verified.
+- **Why not my.gov.sa:** it blocks automated access (403 / Cloudflare), and we never bypass protections.
+- **Retrieval:** multilingual embeddings (`paraphrase-multilingual-MiniLM-L12-v2`) + TF-IDF character n-grams (hybrid α=0.4), with cached embeddings. No FAISS needed.
+- **Answers:** official text only, with the official link and capture date. It declines when the top score is below a calibrated threshold (0.424).
+- **V1 results (129-question benchmark, held-out test half):**
+  - Top-1 69.6%, Top-3 82.6%, MRR 0.780
+  - Declined 100% of unanswerable questions, but only 50% of answerable questions were answered correctly. **This is the "too strict" problem.**
+- **Docs:** README, LEARNING_GUIDE.md, docs/ (architecture, provenance, methodology, DEVELOPMENT_LOG, CV_BULLETS).
+
+---
+
+## 3. The downloaded files on the other laptop — what they are
+
+Each `dalil_v2_<source>.json` is a **raw capture of official government service pages**, English + Arabic. They were collected in a normal Chrome session, one page at a time with ~2 s gaps. They were exported from the browser because the cloud AI could not reach these sites directly.
+
+Each file has `{source, origin, exported_at, user_agent, records:[{id, lang, url, http_status, fetched_at, page_title, main_html}]}`. `main_html` is the page's main content, stored verbatim. It is parsed later by `src/ingestion/generic_service_page.py`.
+
+| File | Agency | Services | Pages |
+|---|---|---|---|
+| `dalil_v2_hrsd.json` | Ministry of Human Resources & Social Development (labour, visas for workers, social support, disability) | 126 | 252 (EN+AR) |
+| `dalil_v2_zatca.json` | Zakat, Tax and Customs Authority (VAT, zakat, customs, car import) | 161 | 322 |
+| `dalil_v2_moe.json` | Ministry of Education | 49 | 97 (1 Arabic page failed) |
+| `dalil_v2_haj.json` | Ministry of Hajj and Umrah | 13 | 26 |
+| `dalil_v2_sfda.json` | Saudi Food and Drug Authority | 33 | 66 |
+| `dalil_v2_momah.json` | Ministry of Municipalities and Housing (building permits, municipal licences) | 152 | 304 |
+| `dalil_v2_moj.json` | Ministry of Justice (power of attorney, marriage/divorce, inheritance, real estate, enforcement) | 151 | up to 302 (export taken near the end of capture) |
+| `dalil_v2_mofa.json` | Ministry of Foreign Affairs (passports abroad, visas, attestation) | 42 | 84 |
+| `dalil_v2_chi.json` | Council of Health Insurance | 15 | 30 |
+
+**Total: about 740 new official services from 9 agencies**, plus the 73 Ministry of Commerce services, so **~810 services from 10 agencies**. These numbers are pages captured; the final count after parsing and validation will be a little lower, because pages without a description are quarantined.
+
+**How to use them:**
+1. Copy all 9 files into `v2_work_in_progress\data\raw\official\v2\`.
+2. Then run the commands in §6.
+
+**Not captured (coverage gaps):**
+- Ministry of Interior / Absher (passports, iqama, national ID, traffic): site unreachable from that connection.
+- Transport General Authority: unreachable.
+- Ministry of Health: bot-check page.
+- GOSI: "Request Rejected" firewall.
+- my.gov.sa: 403.
+
+None of these were bypassed.
+
+**Optional browser clean-up on the other laptop:**
+- The captured pages are also stored inside Chrome, in each site's IndexedDB database named `dalil_harvest_v2`.
+- On mc.gov.sa there is also `dalil_harvest`.
+- To remove them: open the site, press F12 → Console, and run `indexedDB.deleteDatabase('dalil_harvest_v2')`.
+
+---
+
+## 4. What V2 changes (code written and unit-tested)
+
+**The trade-name diagnosis ("How can I reserve a trade name?" was refused):**
+- Retrieval had actually ranked the right service (Trade Name Reservation, `mc-1`) **first**. The answer was refused only because the score 0.413 was below V1's strict threshold of 0.424.
+- Deeper causes:
+  1. Everyday words ("business name", "book", "company name") don't overlap with official terms ("trade name", "reserve").
+  2. Sibling services ("Extension of… reservation", "Cancel… reservation") look almost identical to the model.
+
+**V2 retrieval (all switchable; the evaluation picks the best combination on dev data, never on test):**
+- `src/retrieval/lexicon.py`: bilingual everyday-to-official vocabulary for query expansion (EN + Saudi Arabic). It is general vocabulary, not per-question answers.
+- `src/retrieval/bm25.py`: word-level BM25 with light Arabic/English stemming.
+- Title chunks per service (`src/indexing/chunking.py`) for title boosting.
+- **Title coverage** (`Retriever.title_coverage`): ranks down services whose titles contain words the user didn't use.
+- Query-embedding cache (repeat questions are instant).
+- Multiple signals combined: `w_dense·dense + w_char·char-ngrams + w_bm25·bm25 (+ w_tcov·title coverage)`.
+- **Early indicative result** on your 10 trade-name phrasings (MC data only): right service ranked #1 for 3/10 before, 8/10 after, and every phrasing now in the top 3. This is not the final evaluation.
+
+**V2 answers:** `src/answering/synthesizer.py`
+- One organised answer built from **several** official passages and services, with these sections (empty ones hidden):
+  - Direct answer
+  - What you need
+  - Documents
+  - Steps (numbered)
+  - Fees & processing
+  - Who it is for
+  - Important notes
+  - Official sources
+- Every fact is an official sentence with a citation number [n]. Dalil only adds a templated lead sentence and headings.
+- Question-intent detection (fees / time / documents / requirements / steps) puts the relevant section first.
+- **Three-way decision:** confident answer / "possible match" (tentative) / decline. This fixes the too-strict V1 behaviour.
+- Conflicting fees from different agencies are flagged.
+- Language notes appear when official text exists only in the other language. There is no machine translation.
+
+**V2 data pipeline:**
+- `src/ingestion/generic_service_page.py`: one parser for all the new ministry layouts (Drupal fields, tabs, SharePoint headings, bold labels), English and Arabic, verbatim text, error-page detection.
+- `pipeline.py`: automatically loads every `data/raw/official/v2/dalil_v2_*.json`.
+- `schema.py`: new `notes` field.
+
+**V2 evaluation:**
+- `data/evaluation/make_benchmark_v2.py` → `benchmark_v2.csv`: 150 questions, 43 topic families × several phrasings (formal, conversational, short, misspelled, Arabic formal and colloquial, mixed) + 28 unanswerable. Split by family into dev / val / test.
+  - The trade-name family, including your exact examples, is in dev.
+- `src/evaluation/evaluate_v2.py`:
+  - grid search on dev; top 8 compared on val; results reported on test
+  - thresholds: decline below `t_tentative` (keeps ≥80% of unanswerable questions declined); confident at ≥90% precision
+  - metrics: Top-1, Top-3, MRR, answerable success, false-refusal rate, unsupported-refusal rate, refusal precision/recall/F1, per language, per phrasing style, paraphrase robustness
+  - the V1 setting on the same questions, for comparison
+  - cold-start and warm-query latency
+  - writes `results_v2.json` and `retrieval_config_v2.json`
+- Still to do (§6): add benchmark families for Municipalities, Foreign Affairs, Food & Drug and Health Insurance once their titles are visible in the data.
+
+**V2 app** (`app.py` + `src/ui.py`):
+- New answer layout (sections, [n] citations, sources block, collapsible "official evidence").
+- "Possible match" badge; loading spinner; model warmed at start-up.
+- Explore page filtered by agency, with pages of 30 results.
+- The Knowledge Base page computes agency and service counts automatically.
+- The Evaluation page shows V1 vs V2 side by side, by language and by phrasing style.
+- Arabic is displayed right-to-left.
+
+**Tests:** 62 unit tests pass: parser fixtures, lexicon, BM25, title coverage, grounding (every fact in an answer must be verbatim official text), three-way decision, thresholds, index cache. The integration tests need the built V2 index.
+
+**Dev dependency fix:** `requirements-dev.txt` (includes pytest). Install with `pip install -r requirements-dev.txt`.
+
+---
+
+## 5. Honest status
+
+- V2 code: done and unit-tested.
+- V2 data: captured, but sitting on the other laptop.
+- V2 index / evaluation / final numbers: **not run yet**. No V2 metrics are claimed anywhere.
+- Not deployed (as you asked).
+
+---
+
+## 6. How to finish V2 (commands, run inside `v2_work_in_progress`)
+
+```bash
+# 0) once
+python -m venv .venv && .venv\Scripts\activate
+pip install -r requirements-dev.txt
+
+# 1) put the 9 files here:
+#    data\raw\official\v2\dalil_v2_*.json
+
+# 2) build knowledge base + index (parses pages, validates, embeds; ~5-10 min on CPU first time)
+python -m src.indexing.build_index
+
+# 3) check parsing quality (how many services per agency, quarantined count)
+type data\processed\build_report.json
+
+# 4) (optional) add benchmark families for momah/mofa/sfda/chi in data\evaluation\make_benchmark_v2.py,
+#    using exact English titles from data\processed\services.csv, then:
+python data\evaluation\make_benchmark_v2.py
+
+# 5) evaluate (tunes on dev, selects on val, reports on test, writes retrieval_config_v2.json)
+python -m src.evaluation.evaluate_v2
+
+# 6) tests + app
+python -m pytest
+streamlit run app.py
+```
+
+If step 5 stops with "benchmark titles not found", a title in `make_benchmark_v2.py` doesn't exactly match the parsed title. Correct the title text (don't delete the question).
+
+---
+
+## 7. Prompt to give another AI (copy everything below)
+
+> I'm building **Dalil AI**, a bilingual Arabic–English, retrieval-grounded assistant for official Saudi public-service information (a student portfolio project; it must cost $0, and it must never invent government information). The repository is attached / described below.
+>
+> **V1 (done):**
+> - 73 Ministry of Commerce services (official EN+AR), captured with provenance.
+> - Multilingual MiniLM embeddings + char-n-gram TF-IDF hybrid, cached index, no FAISS.
+> - Grounded answers with official links; calibrated refusal.
+> - Result: Top-1 69.6% / Top-3 82.6% / MRR 0.78 on the held-out test half.
+> - Problem: too strict — it declined all unanswerable questions but answered only 50% of answerable ones correctly. "How can I reserve a trade name?" was refused (score 0.413 < threshold 0.424) even though retrieval had ranked the right service first.
+>
+> **V2 (code written, unit-tested, not yet evaluated):**
+> - ~740 new official services from 9 agencies (HRSD, ZATCA, Education, Hajj & Umrah, SFDA, Municipalities & Housing, Justice, Foreign Affairs, Health Insurance), captured as `data/raw/official/v2/dalil_v2_*.json` and parsed by `src/ingestion/generic_service_page.py`.
+> - Retrieval adds a bilingual lay→official lexicon (query expansion), BM25, per-service title chunks, a title-coverage feature and query-embedding caching.
+> - `src/answering/synthesizer.py` builds one sectioned answer (Direct answer, What you need, Documents, Steps, Fees & processing, Notes, Sources) from several official passages. Every fact is verbatim official text with an [n] citation. It uses a three-way decision (answer / tentative / decline).
+> - `src/evaluation/evaluate_v2.py` tunes on dev, selects on val and reports on test, with metrics for answerable success, false refusals, unsupported refusals, per-language and per-phrasing results, paraphrase robustness and latency.
+> - Benchmark: `data/evaluation/benchmark_v2.csv` (150 questions, 43 families).
+>
+> **Please help me:**
+> 1. Run `python -m src.indexing.build_index` and inspect `build_report.json` for parsing problems per agency. Fix `generic_service_page.py` label rules if a field is systematically missing, keeping text verbatim.
+> 2. Add benchmark families for Municipalities, Foreign Affairs, SFDA and Health Insurance, **before** tuning, using exact titles from `services.csv`.
+> 3. Run `python -m src.evaluation.evaluate_v2` and explain the V1-vs-V2 results honestly. Never tune on the test split and never invent metrics.
+> 4. Check the answer for "How can I reserve a trade name?".
+> 5. Update README/docs with actual numbers, coverage (agencies, services, AR/EN), gaps (MOI/Absher, TGA, MOH, GOSI unreachable) and limitations.
+> 6. Don't deploy until I approve.
+>
+> **Rules:** no paid APIs, no bypassing site protections, no fabricated data or metrics, and no machine translation shown as official text.

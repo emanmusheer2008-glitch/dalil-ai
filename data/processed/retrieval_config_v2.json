@@ -1,0 +1,20 @@
+{
+  "method": "v2",
+  "alpha": 0.0,
+  "params": {
+    "w_dense": 0.3,
+    "w_char": 0.3,
+    "w_bm25": 0.0,
+    "expand": true,
+    "expand_dense": false,
+    "w_tcov": 0.1
+  },
+  "title_chunks": true,
+  "t_answer": 0.3906,
+  "t_tentative": 0.2852,
+  "t_related": 0.1999,
+  "threshold": 0.2852,
+  "calibrated": true,
+  "calibrated_at": "2026-10-01T13:30:38+00:00",
+  "source": "src/evaluation/evaluate_v2.py"
+}

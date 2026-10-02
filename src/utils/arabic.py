@@ -13,6 +13,9 @@ import unicodedata
 # Arabic diacritics (tashkeel) + Quranic annotation marks + superscript alef.
 _DIACRITICS = re.compile(r"[ؐ-ًؚ-ٰٟۖ-ۭ]")
 _TATWEEL = "ـ"
+_TANWEEN_ALEF = re.compile("(?:\u064Bا|ا\u064B)(?![\u0621-\u064A])")
+#: bump when matching normalisation changes (invalidates the fitted lexical-index cache)
+NORMALIZATION_VERSION = 2
 _ZERO_WIDTH = re.compile(r"[​‌‍‎‏﻿]")
 _ARABIC_CHAR = re.compile(r"[؀-ۿݐ-ݿࢠ-ࣿ]")
 _LATIN_CHAR = re.compile(r"[A-Za-z]")
@@ -39,8 +42,12 @@ def normalize_arabic(text: str) -> str:
     - taa marbuta (ة) -> ha (ه)
     - hamza on waw/ya (ؤ ئ) -> ء
     - Arabic-Indic digits -> ASCII
+    - indefinite accusative ending written with tanween (اسماً / اسمًا -> اسم): the alef there is an
+      orthographic carrier of the tanween, not part of the word. Only applied when the tanween mark
+      is actually typed -- a bare final alef is ambiguous and left alone.
     """
     text = clean_unicode(text)
+    text = _TANWEEN_ALEF.sub("", text)
     text = _DIACRITICS.sub("", text).replace(_TATWEEL, "")
     text = re.sub("[أإآٱ]", "ا", text)
     text = text.replace("ى", "ي").replace("ة", "ه")

@@ -1,0 +1,130 @@
+query_id,query,language,expected_service_id,acceptable_service_ids,query_type,supported,split
+q001,I want to reserve a name for my new business,en,mc-1,,paraphrase,1,calibration
+q002,أبغى أحجز اسم تجاري لمشروعي الجديد,ar,mc-1,,paraphrase,1,calibration
+q003,"My trade name reservation is about to expire, can I extend it?",en,mc-34,,paraphrase,1,test
+q004,كيف أمدد حجز الاسم التجاري قبل ما ينتهي؟,ar,mc-34,,paraphrase,1,test
+q005,How do I cancel a business name I reserved?,en,mc-22,,paraphrase,1,calibration
+q006,أبي ألغي حجز اسم تجاري حجزته,ar,mc-22,,paraphrase,1,calibration
+q007,How do I register a commercial registration for a sole proprietorship?,en,mc-38,,paraphrase,1,test
+q008,كيف أطلع سجل تجاري لمؤسسة فردية؟,ar,mc-38,,paraphrase,1,test
+q009,Do I need to confirm my sole proprietorship's commercial registry data every year?,en,mc-15,mc-2;mc-11,paraphrase,1,calibration
+q010,التأكيد السنوي لبيانات السجل التجاري للمؤسسة كم رسومه؟,ar,mc-15,mc-2;mc-11,paraphrase,1,calibration
+q011,I closed my shop for good. How do I cancel my establishment's commercial registration?,en,mc-68,,hard,1,test
+q012,كيف أشطب السجل التجاري لمؤسستي الفردية؟,ar,mc-68,,hard,1,test
+q013,I'm selling my one-person business to someone else. How do I move the registry into their name?,en,mc-36,,hard,1,calibration
+q014,أبغى أنقل ملكية سجل مؤسستي لشخص ثاني,ar,mc-36,,hard,1,calibration
+q015,Where can I get an official extract of a commercial registration?,en,mc-33,mc-91,paraphrase,1,test
+q016,أحتاج مستخرج سجل تجاري أو إفادة تجارية,ar,mc-33,mc-91,paraphrase,1,test
+q017,Look up a company's details using its commercial registration number,en,mc-91,mc-33;mc-25,paraphrase,1,calibration
+q018,أبغى أستعلم عن بيانات سجل تجاري لشركة,ar,mc-91,mc-33;mc-25,paraphrase,1,calibration
+q019,Steps to set up a limited liability company in Saudi Arabia,en,mc-99,,paraphrase,1,test
+q020,خطوات تأسيس شركة ذات مسؤولية محدودة,ar,mc-99,,paraphrase,1,test
+q021,How do I establish a simple company?,en,mc-98,,paraphrase,1,calibration
+q022,تأسيس شركة توصية بسيطة,ar,mc-98,,paraphrase,1,calibration
+q023,What are the requirements to incorporate a joint stock company?,en,mc-92,mc-94,paraphrase,1,test
+q024,كيف أأسس شركة مساهمة؟,ar,mc-92,mc-94,paraphrase,1,test
+q025,What do I need to start a simplified joint stock company?,en,mc-94,mc-92,paraphrase,1,calibration
+q026,تأسيس شركة مساهمة مبسطة,ar,mc-94,mc-92,paraphrase,1,calibration
+q027,Two partners want to form a general partnership where both are fully liable. How?,en,mc-97,,hard,1,test
+q028,تأسيس شركة تضامن,ar,mc-97,,hard,1,test
+q029,I'm a foreign investor with an investment license. How do I establish my company?,en,mc-20,mc-23,paraphrase,1,calibration
+q030,تأسيس شركة بموجب ترخيص استثماري,ar,mc-20,mc-23,paraphrase,1,calibration
+q031,Can I convert my sole proprietorship into a company?,en,mc-52,,paraphrase,1,test
+q032,تحويل المؤسسة الفردية إلى شركة,ar,mc-52,,paraphrase,1,test
+q033,How can a company manager allow an employee to handle the company's transactions online on his behalf?,en,mc-16,,hard,1,calibration
+q034,كيف أفوض شخص ينجز معاملات منشأتي إلكترونيًا؟,ar,mc-16,,hard,1,calibration
+q035,How can I check that a certificate of origin issued by the ministry is genuine?,en,mc-25,mc-91,paraphrase,1,test
+q036,التحقق من صحة مستند صادر من وزارة التجارة,ar,mc-25,mc-91,paraphrase,1,test
+q037,I became the exclusive distributor of a foreign brand. How do I register the agency?,en,mc-41,,hard,1,calibration
+q038,تسجيل وكالة تجارية جديدة,ar,mc-41,,hard,1,calibration
+q039,Renew my commercial agency registration,en,mc-43,,paraphrase,1,test
+q040,تجديد قيد وكالة تجارية,ar,mc-43,,paraphrase,1,test
+q041,Who is the official registered agent for a brand in Saudi Arabia?,en,mc-18,,hard,1,calibration
+q042,أبغى أعرف مين الوكيل المعتمد لعلامة تجارية,ar,mc-18,,hard,1,calibration
+q043,"As the agent, how do I write off a commercial agency?",en,mc-44,,paraphrase,1,test
+q044,شطب وكالة تجارية من قبل الوكيل,ar,mc-44,,paraphrase,1,test
+q045,Change the details of a registered commercial agency,en,mc-42,,paraphrase,1,calibration
+q046,تعديل بيانات وكالة تجارية مسجلة,ar,mc-42,,paraphrase,1,calibration
+q047,Do I need permission to run a discount sale in my store?,en,mc-46,,hard,1,test
+q048,أبغى أسوي تخفيضات في محلي، هل أحتاج ترخيص؟,ar,mc-46,,hard,1,test
+q049,How do I register a franchise?,en,mc-24,,paraphrase,1,calibration
+q050,تسجيل امتياز تجاري (فرنشايز),ar,mc-24,,paraphrase,1,calibration
+q051,Report a franchisor who broke the franchise law,en,mc-14,,paraphrase,1,test
+q052,بلاغ عن مخالفة نظام الامتياز التجاري,ar,mc-14,,paraphrase,1,test
+q053,Report a shop that is secretly run by a foreigner under a Saudi citizen's name,en,mc-10,,hard,1,calibration
+q054,الإبلاغ عن حالة تستر تجاري,ar,mc-10,,hard,1,calibration
+q055,A store refused to refund me. Where do I file a complaint?,en,mc-55,,hard,1,test
+q056,أبي أقدم شكوى على متجر ما رجع لي فلوسي,ar,mc-55,,hard,1,test
+q057,Check whether a product I bought has been recalled as defective,en,mc-30,,paraphrase,1,calibration
+q058,الاستعلام عن المنتجات المعيبة,ar,mc-30,,paraphrase,1,calibration
+q059,How do I check if my business has immediate violations?,en,mc-5,,paraphrase,1,test
+q060,الاستعلام عن المخالفات الفورية على منشأتي,ar,mc-5,,paraphrase,1,test
+q061,I want to object to a violation decision issued against my company,en,mc-3,,paraphrase,1,calibration
+q062,أبغى أعترض على قرار مخالفة صدر على شركتي,ar,mc-3,,paraphrase,1,calibration
+q063,Track the status of a request I submitted to the Ministry of Commerce,en,mc-19,,paraphrase,1,test
+q064,متابعة حالة طلب قدمته لوزارة التجارة,ar,mc-19,,paraphrase,1,test
+q065,How do I verify that a consultant is licensed to practise?,en,mc-65,,paraphrase,1,calibration
+q066,البحث عن المرخص لهم بمزاولة المهن الاستشارية,ar,mc-65,,paraphrase,1,calibration
+q067,Issue a new license to practise a consulting profession,en,mc-47,mc-49;mc-48,paraphrase,1,test
+q068,إصدار ترخيص مهني جديد,ar,mc-47,mc-49;mc-48,paraphrase,1,test
+q069,My professional license expired. How do I renew it?,en,mc-49,mc-76,paraphrase,1,calibration
+q070,تجديد الترخيص المهني,ar,mc-49,mc-76,paraphrase,1,calibration
+q071,I want to open a gold and jewellery shop. What license do I need?,en,mc-60,,hard,1,test
+q072,ترخيص محل ذهب ومجوهرات,ar,mc-60,,hard,1,test
+q073,Permit to import non-hazardous chemicals,en,mc-63,,paraphrase,1,calibration
+q074,تصريح استيراد مواد كيميائية غير خطرة,ar,mc-63,,paraphrase,1,calibration
+q075,Where do I declare the real beneficial owners of my company?,en,mc-35,,paraphrase,1,test
+q076,الإفصاح عن المستفيد الحقيقي للشركة,ar,mc-35,,paraphrase,1,test
+q077,How can I vote online in chamber of commerce elections?,en,mc-32,,paraphrase,1,calibration
+q078,التصويت الإلكتروني في انتخابات الغرف التجارية,ar,mc-32,,paraphrase,1,calibration
+q079,Update the list of shareholders in the company's records,en,mc-66,mc-150,paraphrase,1,test
+q080,تحديث سجل المساهمين في الشركة,ar,mc-66,mc-150,paraphrase,1,test
+q081,Amend the company's articles of association,en,mc-82,mc-37,paraphrase,1,calibration
+q082,تعديل عقد تأسيس الشركة,ar,mc-82,mc-37,paraphrase,1,calibration
+q083,Submit the results of the company's general assembly meeting,en,mc-7,mc-27;mc-28,paraphrase,1,test
+q084,رفع نتائج اجتماع الجمعية العامة,ar,mc-7,mc-27;mc-28,paraphrase,1,test
+q085,My establishment's commercial registration was suspended. How do I lift the suspension?,en,mc-62,mc-9;mc-67,paraphrase,1,calibration
+q086,رفع تعليق السجل التجاري لمؤسسة فردية,ar,mc-62,mc-9;mc-67,paraphrase,1,calibration
+q087,Update the owner's personal information on the commercial registration,en,mc-13,mc-61,paraphrase,1,test
+q088,تحديث بيانات مالك السجل التجاري,ar,mc-13,mc-61,paraphrase,1,test
+q089,كيف أسجل LLC في السعودية؟,mixed,mc-99,,mixed_language,1,calibration
+q090,annual confirmation للسجل التجاري حق المؤسسة,mixed,mc-15,mc-2;mc-11,mixed_language,1,test
+q091,تجديد commercial agency,mixed,mc-43,,mixed_language,1,calibration
+q092,franchise registration وش المطلوب؟,mixed,mc-24,,mixed_language,1,test
+q093,how to قيد سجل تجاري لمؤسسة فردية,mixed,mc-38,,mixed_language,1,calibration
+q094,What's the best pizza in Riyadh?,en,,,out_of_domain,0,calibration
+q095,Who will win the football match tonight?,en,,,out_of_domain,0,test
+q096,Write my university application essay for me.,en,,,out_of_domain,0,calibration
+q097,What is 15 times 23?,en,,,out_of_domain,0,test
+q098,Tell me a joke,en,,,out_of_domain,0,calibration
+q099,Best hotels to stay in AlUla,en,,,out_of_domain,0,test
+q100,Translate this sentence into French,en,,,out_of_domain,0,calibration
+q101,كيف الطقس في جدة بكرة؟,ar,,,out_of_domain,0,calibration
+q102,طريقة عمل الكبسة,ar,,,out_of_domain,0,test
+q103,أفضل جوال أشتريه هالسنة,ar,,,out_of_domain,0,calibration
+q104,من هو أفضل لاعب في الدوري السعودي؟,ar,,,out_of_domain,0,test
+q105,كيف أتعلم البرمجة من الصفر؟,ar,,,out_of_domain,0,calibration
+q106,How do I renew my passport?,en,,,not_indexed,0,calibration
+q107,How can I renew my driving licence?,en,,,not_indexed,0,test
+q108,How do I apply for a Hajj permit?,en,,,not_indexed,0,calibration
+q109,How can I get my foreign university degree recognized in Saudi Arabia?,en,,,not_indexed,0,test
+q110,Book an appointment at a Ministry of Health primary care centre,en,,,not_indexed,0,calibration
+q111,How do I apply for a tourist e-visa to Saudi Arabia?,en,,,not_indexed,0,test
+q112,How do I register my national address?,en,,,not_indexed,0,calibration
+q113,University admission requirements for King Saud University,en,,,not_indexed,0,test
+q114,How do I register my company for VAT?,en,,,not_indexed,0,calibration
+q115,How do I issue work visas for my company's foreign employees?,en,,,not_indexed,0,test
+q116,How do I get a municipal (Balady) license for my shop?,en,,,not_indexed,0,calibration
+q117,كيف أجدد جواز السفر؟,ar,,,not_indexed,0,calibration
+q118,تجديد الإقامة للعمالة,ar,,,not_indexed,0,test
+q119,كيف أسدد المخالفات المرورية؟,ar,,,not_indexed,0,calibration
+q120,كيف أعادل شهادتي الجامعية من خارج السعودية؟,ar,,,not_indexed,0,test
+q121,كيف أسجل في الضمان الاجتماعي؟,ar,,,not_indexed,0,calibration
+q122,كيف أصدر هوية وطنية لأول مرة؟,ar,,,not_indexed,0,test
+q123,تسجيل المنشأة في التأمينات الاجتماعية,ar,,,not_indexed,0,calibration
+q124,إصدار رخصة بلدي للمحل,ar,,,not_indexed,0,test
+q125,حجز موعد في مستشفى حكومي,ar,,,not_indexed,0,calibration
+q126,Temporary permit for food trucks serving pilgrims during the season,en,,,not_indexed,0,test
+q127,تصاريح موسمية لمركبات الإعاشة,ar,,,not_indexed,0,test
+q128,How do I get a license for a laboratory?,en,,,not_indexed,0,calibration
+q129,إصدار رخصة مختبر,ar,,,not_indexed,0,calibration

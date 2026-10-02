@@ -15,6 +15,14 @@ models/
 .env.*
 .streamlit/secrets.toml
 
+# Raw government page captures: redistribution terms unclear + ~200 MB.
+# Re-create with scripts/browser_capture_*.js (see docs/data_provenance.md).
+data/raw/official/v2/*.json
+data/raw/official/mc/*.json
+
+# Rebuildable caches
+data/processed/lexical_index.pkl
+
 # OS / editor
 .DS_Store
 Thumbs.db
@@ -22,8 +30,9 @@ desktop.ini
 .vscode/
 .idea/
 
-# Temporary files
+# Temporary / local-only files
 *.tmp
 *.log
 _old_v0/
 *.zip
+DALIL_CHAT_CONTEXT.md

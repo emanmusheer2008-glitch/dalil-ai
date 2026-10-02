@@ -36,7 +36,11 @@ T = {
         "insufficient_title": "Not enough verified information",
         "try_instead": "Browse the indexed services in Explore services, or check the unified national platform "
                        "my.gov.sa directly.",
-        "latency": "retrieved in {ms:.0f} ms",
+        "latency": "retrieved in {ms:.0f} ms", "score": "match score",
+        "by_dalil": "Organised by Dalil from the official passages below — every fact carries a source number.",
+        "tentative_title": "Possible match",
+        "evidence_title": "Official evidence — the exact passages retrieved",
+        "loading": "Searching official sources…",
     },
     "ar": {
         "tagline": "دليل ثنائي اللغة للمعلومات الرسمية عن الخدمات العامة في السعودية",
@@ -65,26 +69,30 @@ T = {
         "nav_eval": "التقييم", "nav_about": "عن المشروع",
         "insufficient_title": "لا توجد معلومات موثقة كافية",
         "try_instead": "استعرض الخدمات المفهرسة، أو راجع المنصة الوطنية الموحدة my.gov.sa مباشرة.",
-        "latency": "زمن البحث {ms:.0f} ملّي ثانية",
+        "latency": "زمن البحث {ms:.0f} ملّي ثانية", "score": "درجة المطابقة",
+        "by_dalil": "رتّب دليل هذه الإجابة من المقاطع الرسمية أدناه — كل معلومة مرفق معها رقم مصدرها.",
+        "tentative_title": "تطابق محتمل",
+        "evidence_title": "الأدلة الرسمية — المقاطع المسترجعة كما هي",
+        "loading": "جارٍ البحث في المصادر الرسمية…",
     },
 }
 
 # Examples are benchmark questions that the evaluation answered correctly, plus
 # one question Dalil is expected to decline (not in the indexed corpus).
-EXAMPLES = {
+EXAMPLES = {   # one per agency + one deliberately out-of-scope question (shows the refusal)
     "en": [
-        "Steps to set up a limited liability company in Saudi Arabia",
-        "My professional license expired. How do I renew it?",
-        "How do I register a franchise?",
-        "Permit to import non-hazardous chemicals",
-        "How do I renew my passport?",
+        "Steps to set up a limited liability company",
+        "How can I verify a power of attorney?",
+        "Do I need a building permit to build a house?",
+        "How do I get a permit for Umrah?",
+        "What is the best pizza in Riyadh?",
     ],
     "ar": [
         "خطوات تأسيس شركة ذات مسؤولية محدودة",
-        "التأكيد السنوي لبيانات السجل التجاري للمؤسسة كم رسومه؟",
-        "تحويل المؤسسة الفردية إلى شركة",
-        "الاستعلام عن المنتجات المعيبة",
-        "كيف أجدد جواز السفر؟",
+        "كيف أطلع تأشيرة عاملة منزلية؟",
+        "تصديق المستندات من وزارة الخارجية",
+        "التسجيل في حساب المواطن",
+        "طريقة عمل الكبسة",
     ],
 }
 
@@ -191,4 +199,72 @@ def evidence_block(sa, t: dict, ui_lang: str) -> str:
     for label, text, score, lang in sa.evidence:
         rows.append(f'<div class="dl-ev" dir="{dir_of(lang)}" lang="{lang}"><div class="sec">{esc(label)} · '
                     f'{score:.2f}</div>{esc(text)}</div>')
+    return "".join(rows)
+
+
+# ------------------------------------------------------------------ V2 answer
+CSS_V2 = """
+<style>
+[data-testid="stTextInput"] input { unicode-bidi: plaintext; text-align: start; }
+</style>
+<style>
+.dl-ans{background:#fff;border:1px solid var(--dl-line);border-radius:18px;padding:22px 26px;margin:8px 0 14px;
+  box-shadow:0 1px 3px rgba(20,30,25,.05)}
+.dl-ans.tentative{border-color:#EBD3A2}
+.dl-lead{font-size:1.08rem;line-height:1.75;color:var(--dl-ink);margin:0 0 6px}
+.dl-by{font-size:.76rem;color:var(--dl-muted);margin-bottom:14px}
+.dl-sec{margin:16px 0 0}
+.dl-sec h4{font-size:.95rem;margin:0 0 6px;color:var(--dl-green-2);font-weight:700}
+.dl-sec ul,.dl-sec ol{margin:0;padding-inline-start:1.3rem}
+.dl-sec li{margin:3px 0;line-height:1.75}
+.dl-cite{display:inline-block;font-size:.72rem;background:var(--dl-soft);border:1px solid var(--dl-line);
+  border-radius:6px;padding:0 5px;margin-inline-start:6px;color:var(--dl-green-2);font-weight:600;vertical-align:1px}
+.dl-lbl{font-weight:600;color:var(--dl-muted)}
+.dl-src{border-top:1px solid var(--dl-line);margin-top:16px;padding-top:12px}
+.dl-src .row{margin:6px 0;font-size:.9rem;line-height:1.6}
+.dl-src a{color:var(--dl-green) !important;font-weight:600}
+</style>
+"""
+
+
+def _cite(n: int) -> str:
+    return f'<span class="dl-cite">[{n}]</span>'
+
+
+def synth_answer_html(ans, t: dict, s: dict) -> str:
+    """Render a SynthAnswer. Official passages carry [n] citations; Dalil's own
+    words (the lead sentence, headings and notes) are visually separate."""
+    d = dir_of(ans.ui_lang)
+    cls = "dl-ans tentative" if ans.status == "tentative" else "dl-ans"
+    out = [f'<div class="{cls}" dir="{d}" lang="{ans.ui_lang}">',
+           f'<p class="dl-lead">{esc(ans.lead)}</p>',
+           f'<div class="dl-by">{esc(t["by_dalil"])}</div>']
+    for note in ans.notes:
+        out.append(f'<div class="dl-note">{esc(note)}</div>')
+    langs = {c.n: c.lang for c in ans.citations}
+    for sec in ans.sections:
+        tag = "ol" if sec.ordered else "ul"
+        items = []
+        for p in sec.points:
+            pd_ = dir_of(langs.get(p.cite, ans.ui_lang))
+            label = f'<span class="dl-lbl">{esc(p.label)}:</span> ' if p.label else ""
+            items.append(f'<li dir="{pd_}">{label}{esc(p.text)}{_cite(p.cite)}</li>')
+        out.append(f'<div class="dl-sec"><h4>{esc(sec.title)}</h4><{tag}>{"".join(items)}</{tag}></div>')
+    out.append(f'<div class="dl-src"><h4 style="margin:0 0 6px;font-size:.95rem">{esc(s["sec_sources"])}</h4>')
+    for c in ans.citations:
+        other = (f' · <a href="{esc(c.other_url)}" target="_blank" rel="noopener">{esc(t["other_lang"])}</a>'
+                 if c.other_url else "")
+        mod = f' · {esc(t["modified"])}: {esc(c.source_last_modified)}' if c.source_last_modified else ""
+        out.append(f'<div class="row" dir="{dir_of(c.lang)}">{_cite(c.n)} <b>{esc(c.title)}</b> — {esc(c.agency)}<br>'
+                   f'<a href="{esc(c.url)}" target="_blank" rel="noopener">{esc(t["official_page"])} ↗</a>{other}'
+                   f'<span class="dl-meta"> · {esc(t["collected"])} {esc((c.date_collected or "")[:10])}{mod}</span></div>')
+    out.append("</div></div>")
+    return "".join(out)
+
+
+def evidence_v2_html(ans, section_labels: dict) -> str:
+    rows = []
+    for n, section, text, score, lang in ans.evidence:
+        rows.append(f'<div class="dl-ev" dir="{dir_of(lang)}" lang="{lang}"><div class="sec">[{n}] '
+                    f'{esc(section_labels.get(section, section))} · {score:.2f}</div>{esc(text)}</div>')
     return "".join(rows)

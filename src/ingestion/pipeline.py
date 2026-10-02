@@ -18,6 +18,7 @@ from src import config
 from src.ingestion.base import BaseLoader
 from src.ingestion.csv_loader import LegacySeedCSVLoader
 from src.ingestion.document_loader import SavedPageLoader
+from src.ingestion.generic_service_page import GenericServiceLoader
 from src.ingestion.mc_catalog import MCCatalogLoader
 from src.ingestion.normalization import normalize_record
 from src.ingestion.official_open_data import OpenDataFileLoader
@@ -31,6 +32,10 @@ def default_loaders() -> list[BaseLoader]:
     mc = raw / "official" / "mc" / "mc_services_capture.json"
     if mc.exists():
         loaders.append(MCCatalogLoader(mc))
+    for cap in sorted((raw / "official" / "v2").glob("dalil_v2_*.json")):
+        if "_" in cap.stem[len("dalil_v2_"):]:
+            continue  # supplements (dalil_v2_<src>_<tag>.json) are merged by their main file's loader
+        loaders.append(GenericServiceLoader(cap))
     if (raw / "manual").exists():
         loaders.append(SavedPageLoader(raw / "manual"))
     if (raw / "open_data").exists():
@@ -57,7 +62,8 @@ def run(loaders: list[BaseLoader] | None = None, write: bool = True) -> dict:
                 ok += 1
             else:
                 quarantined.append({**rec.to_dict(), "_errors": res.errors, "_warnings": res.warnings})
-        per_source[loader.describe()] = {"loaded": len(recs), "accepted": ok}
+        per_source[loader.describe()] = {"loaded": len(recs), "accepted": ok,
+                                         **getattr(loader, "page_stats", {})}
 
     unique, dropped = find_duplicates(accepted)
     for rec, kept in dropped:

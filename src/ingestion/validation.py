@@ -6,6 +6,8 @@ block indexing.
 """
 from __future__ import annotations
 
+import re
+
 from dataclasses import dataclass, field
 from urllib.parse import urlparse
 
@@ -55,8 +57,15 @@ def validate_record(rec: ServiceRecord) -> ValidationResult:
         res.errors.append("missing service_id")
     if not (rec.title_en or rec.title_ar):
         res.errors.append("missing title (en and ar)")
-    if not (rec.description_en or rec.description_ar):
-        res.errors.append("missing description (en and ar)")
+    # A title alone is not knowledge: require at least one substantive official field.
+    # (A description is preferred but some agencies, e.g. SFDA, publish only steps/requirements.)
+    content = ("description", "steps", "requirements", "required_documents", "eligibility")
+    def substantive(v):  # "- -" or "N/A" placeholders are not content
+        return bool(v) and len(re.findall(r"[^\W\d_]", str(v))) >= 15
+    if not any(substantive(getattr(rec, f"{f}_{l}", None)) for f in content for l in ("en", "ar")):
+        res.errors.append("no official content (description/steps/requirements/documents)")
+    elif not (rec.description_en or rec.description_ar):
+        res.warnings.append("no description (other official fields present)")
     if not (rec.official_url_en or rec.official_url_ar):
         res.errors.append("missing official_url")
 

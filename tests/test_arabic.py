@@ -44,3 +44,11 @@ def test_utf8_roundtrip(tmp_path):
     p = tmp_path / "ar.txt"
     p.write_text(text, encoding="utf-8")
     assert p.read_text(encoding="utf-8") == text
+
+
+def test_tanween_accusative_alef_is_normalised_only_when_tanween_is_typed():
+    from src.utils.arabic import normalize_arabic
+    assert normalize_arabic("اسماً تجارياً") == "اسم تجاري"
+    assert normalize_arabic("اسمًا") == "اسم"
+    assert normalize_arabic("كتابا") == "كتابا"      # bare final alef: ambiguous, left alone
+    assert normalize_arabic("ماءً") == "ماء"

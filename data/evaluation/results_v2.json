@@ -1,0 +1,819 @@
+{
+  "generated_at": "2026-10-01T13:30:38+00:00",
+  "benchmark": {
+    "n": 250,
+    "by_split": {
+      "dev/unanswerable": 11,
+      "dev/answerable": 42,
+      "test/unanswerable": 21,
+      "test/answerable": 120,
+      "val/unanswerable": 11,
+      "val/answerable": 45
+    },
+    "fresh_queries": 100,
+    "families": 121
+  },
+  "index": {
+    "n_services": 799,
+    "n_chunks": 8188
+  },
+  "selected": {
+    "name": "v2_d0.3_c0.3_b0.0_x10_t1_tc0.1",
+    "method": "v2",
+    "alpha": 0.0,
+    "title": true,
+    "params": {
+      "w_dense": 0.3,
+      "w_char": 0.3,
+      "w_bm25": 0.0,
+      "expand": true,
+      "expand_dense": false,
+      "w_tcov": 0.1
+    },
+    "rule": "best pooled dev+val MRR over all configs"
+  },
+  "selection_history": {
+    "first_run_rule": "dev top-8 (+V1), best val MRR",
+    "first_run_choice": "v1_hybrid_a0.4",
+    "first_run_choice_test": {
+      "n": 120,
+      "top1": 0.7,
+      "top3": 0.8416666666666667,
+      "top5": 0.8916666666666667,
+      "mrr": 0.7797321428571429
+    },
+    "final_rule": "best pooled dev+val MRR over all configs",
+    "final_choice": "v2_d0.3_c0.3_b0.0_x10_t1_tc0.1"
+  },
+  "refusal_model_note": "A logistic model on (top score, margin, char max, dense max, is_arabic) was compared with a single threshold on the top score by 5x5-fold CV on dev+val: AUC 0.92 vs 0.91. Not adopted (tiny gain, ~110 training examples, less explainable).",
+  "comparison_dev_val_test": {
+    "v2_d0.3_c0.3_b0.0_x10_t1_tc0.1": {
+      "dev": {
+        "n": 42,
+        "top1": 0.7142857142857143,
+        "top3": 0.8571428571428571,
+        "top5": 0.8809523809523809,
+        "mrr": 0.7919973544973544
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.8222222222222222,
+        "top3": 0.9111111111111111,
+        "top5": 0.9333333333333333,
+        "mrr": 0.8637037037037038
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.8166666666666667,
+        "top3": 0.9333333333333333,
+        "top5": 0.975,
+        "mrr": 0.8840277777777777
+      }
+    },
+    "v2_d0.4_c0.3_b0.0_x10_t1_tc0.1": {
+      "dev": {
+        "n": 42,
+        "top1": 0.7142857142857143,
+        "top3": 0.8571428571428571,
+        "top5": 0.8809523809523809,
+        "mrr": 0.7839285714285713
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.8222222222222222,
+        "top3": 0.9111111111111111,
+        "top5": 0.9333333333333333,
+        "mrr": 0.8685185185185186
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.8083333333333333,
+        "top3": 0.9333333333333333,
+        "top5": 0.9833333333333333,
+        "mrr": 0.8805555555555554
+      }
+    },
+    "v2_d0.6_c0.3_b0.0_x10_t1_tc0.1": {
+      "dev": {
+        "n": 42,
+        "top1": 0.7142857142857143,
+        "top3": 0.8571428571428571,
+        "top5": 0.8809523809523809,
+        "mrr": 0.7819727891156463
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.8222222222222222,
+        "top3": 0.8888888888888888,
+        "top5": 0.9111111111111111,
+        "mrr": 0.8685185185185185
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.8083333333333333,
+        "top3": 0.9333333333333333,
+        "top5": 0.9583333333333334,
+        "mrr": 0.8748611111111111
+      }
+    },
+    "v2_d0.5_c0.15_b0.3_x10_t0_tc0.2": {
+      "dev": {
+        "n": 42,
+        "top1": 0.7380952380952381,
+        "top3": 0.8571428571428571,
+        "top5": 0.8571428571428571,
+        "mrr": 0.7948979591836735
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.7777777777777778,
+        "top3": 0.9333333333333333,
+        "top5": 0.9555555555555556,
+        "mrr": 0.8537037037037039
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.7416666666666667,
+        "top3": 0.8833333333333333,
+        "top5": 0.925,
+        "mrr": 0.8200793650793651
+      }
+    },
+    "v2_d0.3_c0.15_b0.0_x10_t1_tc0.1": {
+      "dev": {
+        "n": 42,
+        "top1": 0.7142857142857143,
+        "top3": 0.8333333333333334,
+        "top5": 0.8571428571428571,
+        "mrr": 0.7805839002267574
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.8222222222222222,
+        "top3": 0.8888888888888888,
+        "top5": 0.9111111111111111,
+        "mrr": 0.8661111111111112
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.8083333333333333,
+        "top3": 0.9583333333333334,
+        "top5": 0.975,
+        "mrr": 0.8811805555555556
+      }
+    },
+    "v2_d0.6_c0.3_b0.0_x10_t1_tc0.2": {
+      "dev": {
+        "n": 42,
+        "top1": 0.7142857142857143,
+        "top3": 0.8333333333333334,
+        "top5": 0.8571428571428571,
+        "mrr": 0.7805839002267574
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.8222222222222222,
+        "top3": 0.8888888888888888,
+        "top5": 0.9111111111111111,
+        "mrr": 0.8661111111111112
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.8083333333333333,
+        "top3": 0.9583333333333334,
+        "top5": 0.975,
+        "mrr": 0.8811805555555556
+      }
+    },
+    "v2_d0.6_c0.3_b0.15_x10_t1_tc0.2": {
+      "dev": {
+        "n": 42,
+        "top1": 0.7380952380952381,
+        "top3": 0.8333333333333334,
+        "top5": 0.8809523809523809,
+        "mrr": 0.7986772486772487
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.7777777777777778,
+        "top3": 0.9111111111111111,
+        "top5": 0.9333333333333333,
+        "mrr": 0.8462962962962963
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.8166666666666667,
+        "top3": 0.9333333333333333,
+        "top5": 0.975,
+        "mrr": 0.88
+      }
+    },
+    "v2_d0.5_c0.3_b0.0_x10_t1_tc0.2": {
+      "dev": {
+        "n": 42,
+        "top1": 0.7142857142857143,
+        "top3": 0.8333333333333334,
+        "top5": 0.8571428571428571,
+        "mrr": 0.77744708994709
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.8222222222222222,
+        "top3": 0.8888888888888888,
+        "top5": 0.9111111111111111,
+        "mrr": 0.8650000000000001
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.825,
+        "top3": 0.9416666666666667,
+        "top5": 0.9833333333333333,
+        "mrr": 0.8883333333333333
+      }
+    },
+    "v1_hybrid_a0.4": {
+      "dev": {
+        "n": 42,
+        "top1": 0.6190476190476191,
+        "top3": 0.7380952380952381,
+        "top5": 0.8333333333333334,
+        "mrr": 0.7022486772486773
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.7777777777777778,
+        "top3": 0.9333333333333333,
+        "top5": 0.9333333333333333,
+        "mrr": 0.8476190476190477
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.7,
+        "top3": 0.8416666666666667,
+        "top5": 0.8916666666666667,
+        "mrr": 0.7797321428571429
+      }
+    },
+    "dense_only": {
+      "dev": {
+        "n": 42,
+        "top1": 0.5714285714285714,
+        "top3": 0.7380952380952381,
+        "top5": 0.7857142857142857,
+        "mrr": 0.6581632653061225
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.6888888888888889,
+        "top3": 0.8666666666666667,
+        "top5": 0.8888888888888888,
+        "mrr": 0.7759259259259259
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.7166666666666667,
+        "top3": 0.8333333333333334,
+        "top5": 0.8583333333333333,
+        "mrr": 0.7832969576719577
+      }
+    },
+    "char_only": {
+      "dev": {
+        "n": 42,
+        "top1": 0.6190476190476191,
+        "top3": 0.8095238095238095,
+        "top5": 0.8333333333333334,
+        "mrr": 0.707766439909297
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.6444444444444445,
+        "top3": 0.8222222222222222,
+        "top5": 0.9111111111111111,
+        "mrr": 0.7479894179894182
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.6833333333333333,
+        "top3": 0.8,
+        "top5": 0.8416666666666667,
+        "mrr": 0.7456547619047619
+      }
+    }
+  },
+  "thresholds": {
+    "t_answer": 0.390576034784317,
+    "t_tentative": 0.2851599007844925,
+    "t_related": 0.19989115476608277,
+    "rule": "t_tentative: lowest keeping >=80% unsupported refusal; t_answer: lowest with >=90% confident-answer precision (fit on dev+val)"
+  },
+  "v2_test": {
+    "retrieval": {
+      "n": 120,
+      "top1": 0.8166666666666667,
+      "top3": 0.9333333333333333,
+      "top5": 0.975,
+      "mrr": 0.8840277777777777
+    },
+    "retrieval_by_language": {
+      "ar": {
+        "n": 53,
+        "top1": 0.8679245283018868,
+        "top3": 0.9811320754716981,
+        "top5": 0.9811320754716981,
+        "mrr": 0.921383647798742
+      },
+      "en": {
+        "n": 63,
+        "top1": 0.7936507936507936,
+        "top3": 0.9047619047619048,
+        "top5": 0.9682539682539683,
+        "mrr": 0.8650793650793651
+      },
+      "mixed": {
+        "n": 4,
+        "top1": 0.5,
+        "top3": 0.75,
+        "top5": 1.0,
+        "mrr": 0.6875
+      }
+    },
+    "retrieval_by_style": {
+      "colloquial": {
+        "n": 16,
+        "top1": 0.75,
+        "top3": 0.9375,
+        "top5": 0.9375,
+        "mrr": 0.84375
+      },
+      "conversational": {
+        "n": 30,
+        "top1": 0.7333333333333333,
+        "top3": 0.8333333333333334,
+        "top5": 0.9333333333333333,
+        "mrr": 0.8155555555555555
+      },
+      "fees": {
+        "n": 1,
+        "top1": 1.0,
+        "top3": 1.0,
+        "top5": 1.0,
+        "mrr": 1.0
+      },
+      "formal": {
+        "n": 53,
+        "top1": 0.8679245283018868,
+        "top3": 0.9811320754716981,
+        "top5": 1.0,
+        "mrr": 0.9220125786163522
+      },
+      "mixed": {
+        "n": 4,
+        "top1": 0.5,
+        "top3": 0.75,
+        "top5": 1.0,
+        "mrr": 0.6875
+      },
+      "short": {
+        "n": 16,
+        "top1": 0.9375,
+        "top3": 1.0,
+        "top5": 1.0,
+        "mrr": 0.96875
+      }
+    },
+    "decision": {
+      "t_answer": 0.390576034784317,
+      "t_tentative": 0.2851599007844925,
+      "n_answerable": 120,
+      "n_unanswerable": 21,
+      "answerable_success_top1": 0.7416666666666667,
+      "answerable_success_top3": 0.8083333333333333,
+      "false_refusal_rate": 0.175,
+      "confident_answer_rate": 0.5166666666666667,
+      "confident_answer_precision": 0.9193548387096774,
+      "unsupported_refusal_rate": 0.6190476190476191,
+      "unsupported_confident_answer_rate": 0.047619047619047616,
+      "refusal_precision": 0.38235294117647056,
+      "refusal_recall": 0.6190476190476191,
+      "refusal_f1": 0.4727272727272727
+    },
+    "decision_by_language": {
+      "ar": {
+        "t_answer": 0.390576034784317,
+        "t_tentative": 0.2851599007844925,
+        "n_answerable": 53,
+        "n_unanswerable": 8,
+        "answerable_success_top1": 0.7924528301886793,
+        "answerable_success_top3": 0.8301886792452831,
+        "false_refusal_rate": 0.16981132075471697,
+        "confident_answer_rate": 0.6792452830188679,
+        "confident_answer_precision": 0.9444444444444444,
+        "unsupported_refusal_rate": 0.5,
+        "unsupported_confident_answer_rate": 0.0,
+        "refusal_precision": 0.3076923076923077,
+        "refusal_recall": 0.5,
+        "refusal_f1": 0.380952380952381
+      },
+      "en": {
+        "t_answer": 0.390576034784317,
+        "t_tentative": 0.2851599007844925,
+        "n_answerable": 63,
+        "n_unanswerable": 12,
+        "answerable_success_top1": 0.7142857142857143,
+        "answerable_success_top3": 0.7936507936507936,
+        "false_refusal_rate": 0.1746031746031746,
+        "confident_answer_rate": 0.38095238095238093,
+        "confident_answer_precision": 0.875,
+        "unsupported_refusal_rate": 0.6666666666666666,
+        "unsupported_confident_answer_rate": 0.08333333333333333,
+        "refusal_precision": 0.42105263157894735,
+        "refusal_recall": 0.6666666666666666,
+        "refusal_f1": 0.5161290322580646
+      },
+      "mixed": {
+        "t_answer": 0.390576034784317,
+        "t_tentative": 0.2851599007844925,
+        "n_answerable": 4,
+        "n_unanswerable": 1,
+        "answerable_success_top1": 0.5,
+        "answerable_success_top3": 0.75,
+        "false_refusal_rate": 0.25,
+        "confident_answer_rate": 0.5,
+        "confident_answer_precision": 1.0,
+        "unsupported_refusal_rate": 1.0,
+        "unsupported_confident_answer_rate": 0.0,
+        "refusal_precision": 0.5,
+        "refusal_recall": 1.0,
+        "refusal_f1": 0.6666666666666666
+      }
+    },
+    "retrieval_fresh_families": {
+      "n": 66,
+      "top1": 0.8181818181818182,
+      "top3": 0.9090909090909091,
+      "top5": 0.9545454545454546,
+      "mrr": 0.8757575757575757
+    },
+    "decision_fresh_families": {
+      "t_answer": 0.390576034784317,
+      "t_tentative": 0.2851599007844925,
+      "n_answerable": 66,
+      "n_unanswerable": 10,
+      "answerable_success_top1": 0.7272727272727273,
+      "answerable_success_top3": 0.7727272727272727,
+      "false_refusal_rate": 0.22727272727272727,
+      "confident_answer_rate": 0.4696969696969697,
+      "confident_answer_precision": 0.9354838709677419,
+      "unsupported_refusal_rate": 0.7,
+      "unsupported_confident_answer_rate": 0.1,
+      "refusal_precision": 0.3181818181818182,
+      "refusal_recall": 0.7,
+      "refusal_f1": 0.4375
+    },
+    "retrieval_lexicon_not_fired": {
+      "n": 76,
+      "top1": 0.8026315789473685,
+      "top3": 0.9078947368421053,
+      "top5": 0.9605263157894737,
+      "mrr": 0.8662280701754387
+    },
+    "n_test_lexicon_fired": 44
+  },
+  "v1_setting_on_v2_corpus_test": {
+    "retrieval": {
+      "n": 120,
+      "top1": 0.7,
+      "top3": 0.8416666666666667,
+      "top5": 0.8916666666666667,
+      "mrr": 0.7797321428571429
+    },
+    "retrieval_by_language": {
+      "ar": {
+        "n": 53,
+        "top1": 0.8113207547169812,
+        "top3": 0.9433962264150944,
+        "top5": 0.9811320754716981,
+        "mrr": 0.8723270440251573
+      },
+      "en": {
+        "n": 63,
+        "top1": 0.6349206349206349,
+        "top3": 0.7936507936507936,
+        "top5": 0.8571428571428571,
+        "mrr": 0.7308390022675737
+      },
+      "mixed": {
+        "n": 4,
+        "top1": 0.25,
+        "top3": 0.25,
+        "top5": 0.25,
+        "mrr": 0.3229166666666667
+      }
+    },
+    "retrieval_by_style": {
+      "colloquial": {
+        "n": 16,
+        "top1": 0.5625,
+        "top3": 0.8125,
+        "top5": 0.9375,
+        "mrr": 0.6916666666666667
+      },
+      "conversational": {
+        "n": 30,
+        "top1": 0.6333333333333333,
+        "top3": 0.8,
+        "top5": 0.8333333333333334,
+        "mrr": 0.7225396825396825
+      },
+      "fees": {
+        "n": 1,
+        "top1": 1.0,
+        "top3": 1.0,
+        "top5": 1.0,
+        "mrr": 1.0
+      },
+      "formal": {
+        "n": 53,
+        "top1": 0.8490566037735849,
+        "top3": 0.9622641509433962,
+        "top5": 1.0,
+        "mrr": 0.9078616352201256
+      },
+      "mixed": {
+        "n": 4,
+        "top1": 0.25,
+        "top3": 0.25,
+        "top5": 0.25,
+        "mrr": 0.3229166666666667
+      },
+      "short": {
+        "n": 16,
+        "top1": 0.5625,
+        "top3": 0.6875,
+        "top5": 0.75,
+        "mrr": 0.6510416666666667
+      }
+    },
+    "decision": {
+      "t_answer": 0.7650351057052612,
+      "t_tentative": 0.37234818935394287,
+      "n_answerable": 120,
+      "n_unanswerable": 21,
+      "answerable_success_top1": 0.6083333333333333,
+      "answerable_success_top3": 0.675,
+      "false_refusal_rate": 0.26666666666666666,
+      "confident_answer_rate": 0.008333333333333333,
+      "confident_answer_precision": 1.0,
+      "unsupported_refusal_rate": 0.6666666666666666,
+      "unsupported_confident_answer_rate": 0.0,
+      "refusal_precision": 0.30434782608695654,
+      "refusal_recall": 0.6666666666666666,
+      "refusal_f1": 0.41791044776119407
+    },
+    "decision_by_language": {
+      "ar": {
+        "t_answer": 0.7650351057052612,
+        "t_tentative": 0.37234818935394287,
+        "n_answerable": 53,
+        "n_unanswerable": 8,
+        "answerable_success_top1": 0.7169811320754716,
+        "answerable_success_top3": 0.7735849056603774,
+        "false_refusal_rate": 0.20754716981132076,
+        "confident_answer_rate": 0.018867924528301886,
+        "confident_answer_precision": 1.0,
+        "unsupported_refusal_rate": 0.625,
+        "unsupported_confident_answer_rate": 0.0,
+        "refusal_precision": 0.3125,
+        "refusal_recall": 0.625,
+        "refusal_f1": 0.4166666666666667
+      },
+      "en": {
+        "t_answer": 0.7650351057052612,
+        "t_tentative": 0.37234818935394287,
+        "n_answerable": 63,
+        "n_unanswerable": 12,
+        "answerable_success_top1": 0.5396825396825397,
+        "answerable_success_top3": 0.6190476190476191,
+        "false_refusal_rate": 0.31746031746031744,
+        "confident_answer_rate": 0.0,
+        "confident_answer_precision": null,
+        "unsupported_refusal_rate": 0.6666666666666666,
+        "unsupported_confident_answer_rate": 0.0,
+        "refusal_precision": 0.2857142857142857,
+        "refusal_recall": 0.6666666666666666,
+        "refusal_f1": 0.4
+      },
+      "mixed": {
+        "t_answer": 0.7650351057052612,
+        "t_tentative": 0.37234818935394287,
+        "n_answerable": 4,
+        "n_unanswerable": 1,
+        "answerable_success_top1": 0.25,
+        "answerable_success_top3": 0.25,
+        "false_refusal_rate": 0.25,
+        "confident_answer_rate": 0.0,
+        "confident_answer_precision": null,
+        "unsupported_refusal_rate": 1.0,
+        "unsupported_confident_answer_rate": 0.0,
+        "refusal_precision": 0.5,
+        "refusal_recall": 1.0,
+        "refusal_f1": 0.6666666666666666
+      }
+    },
+    "retrieval_fresh_families": {
+      "n": 66,
+      "top1": 0.7121212121212122,
+      "top3": 0.8181818181818182,
+      "top5": 0.8939393939393939,
+      "mrr": 0.7761363636363636
+    },
+    "decision_fresh_families": {
+      "t_answer": 0.7650351057052612,
+      "t_tentative": 0.37234818935394287,
+      "n_answerable": 66,
+      "n_unanswerable": 10,
+      "answerable_success_top1": 0.5757575757575758,
+      "answerable_success_top3": 0.6212121212121212,
+      "false_refusal_rate": 0.3333333333333333,
+      "confident_answer_rate": 0.0,
+      "confident_answer_precision": null,
+      "unsupported_refusal_rate": 0.6,
+      "unsupported_confident_answer_rate": 0.0,
+      "refusal_precision": 0.21428571428571427,
+      "refusal_recall": 0.6,
+      "refusal_f1": 0.3157894736842105
+    },
+    "retrieval_lexicon_not_fired": {
+      "n": 76,
+      "top1": 0.6973684210526315,
+      "top3": 0.868421052631579,
+      "top5": 0.9342105263157895,
+      "mrr": 0.7892700501253134
+    },
+    "n_test_lexicon_fired": 44,
+    "note": "V1 method/weights on the V2 corpus, thresholds refit the same way"
+  },
+  "v1_as_shipped_on_v2_corpus_test": {
+    "t_answer": 0.4236,
+    "t_tentative": 0.4236,
+    "n_answerable": 120,
+    "n_unanswerable": 21,
+    "answerable_success_top1": 0.5083333333333333,
+    "answerable_success_top3": 0.55,
+    "false_refusal_rate": 0.43333333333333335,
+    "confident_answer_rate": 0.5666666666666667,
+    "confident_answer_precision": 0.8970588235294118,
+    "unsupported_refusal_rate": 0.9047619047619048,
+    "unsupported_confident_answer_rate": 0.09523809523809523,
+    "refusal_precision": 0.2676056338028169,
+    "refusal_recall": 0.9047619047619048,
+    "refusal_f1": 0.41304347826086957
+  },
+  "paraphrase_robustness_test": {
+    "v2": {
+      "families": 47,
+      "all_phrasings_top1": 0.6595744680851063,
+      "all_phrasings_top3": 0.851063829787234,
+      "mean_within_family_top1": 0.8453900709219858
+    },
+    "v1_setting": {
+      "families": 47,
+      "all_phrasings_top1": 0.5106382978723404,
+      "all_phrasings_top3": 0.723404255319149,
+      "mean_within_family_top1": 0.7354609929078013
+    }
+  },
+  "user_reported_trade_name_queries": [
+    {
+      "query": "How can I reserve a trade name?",
+      "top1_service_id": "mc-1",
+      "rank": 1.0,
+      "top_score": 0.38199472427368164,
+      "decision": "tentative"
+    },
+    {
+      "query": "I want to book a business name",
+      "top1_service_id": "mc-1",
+      "rank": 1.0,
+      "top_score": 0.4404183030128479,
+      "decision": "answered"
+    },
+    {
+      "query": "How do I get a commercial name?",
+      "top1_service_id": "mc-1",
+      "rank": 1.0,
+      "top_score": 0.3250618577003479,
+      "decision": "tentative"
+    },
+    {
+      "query": "Where can I register/reserve my company name?",
+      "top1_service_id": "mc-1",
+      "rank": 1.0,
+      "top_score": 0.33739304542541504,
+      "decision": "tentative"
+    }
+  ],
+  "lexicon_ablation": {
+    "selected_without_lexicon_expansion": {
+      "dev": {
+        "n": 42,
+        "top1": 0.6666666666666666,
+        "top3": 0.7380952380952381,
+        "top5": 0.8571428571428571,
+        "mrr": 0.7318405139833711
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.8222222222222222,
+        "top3": 0.9111111111111111,
+        "top5": 0.9333333333333333,
+        "mrr": 0.8685185185185186
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.7916666666666666,
+        "top3": 0.8916666666666667,
+        "top5": 0.9416666666666667,
+        "mrr": 0.8545932539682539
+      }
+    },
+    "selected_without_lexicon_expansion_test_decision": {
+      "t_answer": 0.390576034784317,
+      "t_tentative": 0.2851599007844925,
+      "n_answerable": 120,
+      "n_unanswerable": 21,
+      "answerable_success_top1": 0.6916666666666667,
+      "answerable_success_top3": 0.7333333333333333,
+      "false_refusal_rate": 0.24166666666666667,
+      "confident_answer_rate": 0.5,
+      "confident_answer_precision": 0.95,
+      "unsupported_refusal_rate": 0.6666666666666666,
+      "unsupported_confident_answer_rate": 0.09523809523809523,
+      "refusal_precision": 0.32558139534883723,
+      "refusal_recall": 0.6666666666666666,
+      "refusal_f1": 0.4375
+    },
+    "selected": {
+      "dev": {
+        "n": 42,
+        "top1": 0.7142857142857143,
+        "top3": 0.8571428571428571,
+        "top5": 0.8809523809523809,
+        "mrr": 0.7919973544973544
+      },
+      "val": {
+        "n": 45,
+        "top1": 0.8222222222222222,
+        "top3": 0.9111111111111111,
+        "top5": 0.9333333333333333,
+        "mrr": 0.8637037037037038
+      },
+      "test": {
+        "n": 120,
+        "top1": 0.8166666666666667,
+        "top3": 0.9333333333333333,
+        "top5": 0.975,
+        "mrr": 0.8840277777777777
+      }
+    }
+  },
+  "related_links_test": {
+    "t_related": 0.19989115476608277,
+    "rule": "just above the highest out-of-domain dev+val score",
+    "declined_answerable": 21,
+    "declined_answerable_shown_related": 17,
+    "declined_answerable_right_service_in_related_top3": 11,
+    "declined_unanswerable": 13,
+    "declined_unanswerable_shown_related": 4,
+    "out_of_domain_test_shown_related": 2
+  },
+  "latency": {
+    "cold_start_s": {
+      "imports": 0.011,
+      "index_and_kb_load": 0.311,
+      "model_load_first_encode": 4.247,
+      "total": 4.569
+    },
+    "warm_retrieval_ms": {
+      "mean": 70.08367511667,
+      "p50": 59.60222600003817,
+      "p95": 132.12265870008082
+    },
+    "warm_full_answer_ms": {
+      "mean": 183.60798830000059,
+      "p50": 64.09585300002618,
+      "p95": 792.0230941999704
+    },
+    "repeated_query_ms": 13.347312000064449,
+    "n_queries": 120,
+    "hardware": "x86_64 CPU (Linux, 2 cores), cloud dev container"
+  },
+  "latency_v1_reference": {
+    "mean": 18.97534378295584,
+    "p50": 18.506653000031292,
+    "p95": 22.189548999858744,
+    "n": 129,
+    "hardware": "x86_64 CPU, Linux"
+  }
+}

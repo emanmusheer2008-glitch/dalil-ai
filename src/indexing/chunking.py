@@ -17,15 +17,19 @@ from src.schema import ServiceRecord
 
 # (section name, fields that feed it). Order = display order.
 SECTIONS: list[tuple[str, list[str]]] = [
+    ("title", []),                      # V2: title-only chunk (title boosting)
     ("overview", ["description"]),
     ("requirements", ["eligibility", "requirements"]),
     ("documents", ["required_documents"]),
     ("steps", ["steps"]),
     ("service_facts", ["fees", "processing_time", "target_audience", "service_languages"]),
+    ("notes", ["notes"]),
 ]
 
 SECTION_LABELS = {
     "en": {
+        "title": "Service",
+        "notes": "Important notes",
         "overview": "Overview",
         "requirements": "Conditions",
         "documents": "Required documents",
@@ -40,6 +44,8 @@ SECTION_LABELS = {
         "service_languages": "Service languages",
     },
     "ar": {
+        "title": "الخدمة",
+        "notes": "ملاحظات مهمة",
         "overview": "نظرة عامة",
         "requirements": "الشروط",
         "documents": "المستندات المطلوبة",
@@ -65,7 +71,7 @@ def _chunk_id(service_id: str, lang: str, section: str) -> str:
     return f"{service_id}::{lang}::{section}"
 
 
-def record_to_chunks(rec: ServiceRecord) -> list[dict]:
+def record_to_chunks(rec: ServiceRecord, include_title: bool = True) -> list[dict]:
     chunks = []
     for lang in ("en", "ar"):
         title = rec.get("title", lang)
@@ -73,6 +79,19 @@ def record_to_chunks(rec: ServiceRecord) -> list[dict]:
             continue
         labels = SECTION_LABELS[lang]
         for section, field_names in SECTIONS:
+            if section == "title":
+                if not include_title:
+                    continue
+                agency = rec.get("agency", lang) or ""
+                category = rec.get("category", lang) or ""
+                chunks.append({
+                    "chunk_id": _chunk_id(rec.service_id, lang, "title"), "service_id": rec.service_id,
+                    "lang": lang, "section": "title", "text": title,
+                    "embed_text": f"{title}. {agency}. {category}".strip(". "),
+                    "title": title, "agency": agency, "category": category,
+                    "official_url": rec.get("official_url", lang) or rec.official_url_en or rec.official_url_ar,
+                })
+                continue
             parts = []
             for name in field_names:
                 value = rec.get(name, lang)
@@ -106,8 +125,8 @@ def record_to_chunks(rec: ServiceRecord) -> list[dict]:
     return chunks
 
 
-def build_chunks(records: list[ServiceRecord]) -> pd.DataFrame:
-    rows = [c for rec in records for c in record_to_chunks(rec)]
+def build_chunks(records: list[ServiceRecord], include_title: bool = True) -> pd.DataFrame:
+    rows = [c for rec in records for c in record_to_chunks(rec, include_title)]
     df = pd.DataFrame(rows, columns=CHUNK_COLUMNS)
     if df["chunk_id"].duplicated().any():
         raise ValueError("duplicate chunk ids")

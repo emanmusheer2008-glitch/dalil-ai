@@ -1,0 +1,8 @@
+{
+  "method": "hybrid",
+  "alpha": 0.4,
+  "threshold": 0.4236,
+  "calibrated": true,
+  "calibrated_at": "2026-09-30T10:32:13+00:00",
+  "source": "src/evaluation/evaluate.py"
+}

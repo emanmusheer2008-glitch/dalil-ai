@@ -22,11 +22,14 @@ CHUNKS_CSV = PROCESSED_DIR / "chunks.csv"
 EMBEDDINGS_NPY = PROCESSED_DIR / "embeddings.npy"
 INDEX_META_JSON = PROCESSED_DIR / "index_meta.json"
 BUILD_REPORT_JSON = PROCESSED_DIR / "build_report.json"
+# fitted TF-IDF + BM25 indexes (rebuildable cache; not committed to git)
+LEXICAL_CACHE_PKL = PROCESSED_DIR / "lexical_index.pkl"
 
 BENCHMARK_CSV = EVAL_DIR / "benchmark.csv"
 EVAL_RESULTS_JSON = EVAL_DIR / "results.json"
 EVAL_PER_QUERY_CSV = EVAL_DIR / "per_query_results.csv"
 RETRIEVAL_CONFIG_JSON = PROCESSED_DIR / "retrieval_config.json"
+RETRIEVAL_CONFIG_V2_JSON = PROCESSED_DIR / "retrieval_config_v2.json"
 
 # Free, open-source multilingual sentence encoder (Apache-2.0).
 MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"

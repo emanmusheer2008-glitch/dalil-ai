@@ -1,21 +1,23 @@
 {
   "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
   "dim": 384,
-  "n_chunks": 730,
-  "n_services": 73,
+  "n_chunks": 8188,
+  "n_services": 799,
   "chunks_by_lang": {
-    "en": 365,
-    "ar": 365
+    "en": 4126,
+    "ar": 4062
   },
   "chunks_by_section": {
-    "overview": 146,
-    "requirements": 146,
-    "documents": 146,
-    "steps": 146,
-    "service_facts": 146
+    "title": 1579,
+    "steps": 1562,
+    "overview": 1537,
+    "service_facts": 1473,
+    "requirements": 1258,
+    "documents": 779
   },
-  "fingerprint": "68b97a06a188a4f5c05f342a6f2338d71fd604311346bd3eef3c1d7ed9219974",
+  "fingerprint": "5938254f69cbc54a33f5c5ade5b34b8a1f6b08deea1f2aca313d65fdc152d17b",
   "normalized": true,
-  "built_at": "2026-09-30T10:30:51+00:00",
-  "embedding_seconds": 112.83
+  "built_at": "2026-10-01T09:30:46+00:00",
+  "embedding_seconds": 0.02,
+  "newly_embedded_chunks": 0
 }

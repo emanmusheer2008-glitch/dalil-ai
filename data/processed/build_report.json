@@ -1,24 +1,123 @@
 {
-  "built_at": "2026-09-30T10:28:58+00:00",
+  "built_at": "2026-10-01T09:30:45+00:00",
   "sources": {
-    "mc_catalog:/home/claude/dalil-ai/data/raw/official/mc/mc_services_capture.json": {
+    "mc_catalog:/home/claude/work/dalil/data/raw/official/mc/mc_services_capture.json": {
       "loaded": 75,
       "accepted": 73
     },
-    "saved_pages:/home/claude/dalil-ai/data/raw/manual": {
+    "generic_service_pages:dalil_v2_chi.json": {
+      "loaded": 15,
+      "accepted": 15,
+      "pages_in_capture": 30,
+      "pages_http_200": 15,
+      "pages_failed_http": 15,
+      "pages_filled_by_supplement": 0,
+      "pages_error_or_empty": 0,
+      "pages_wrong_language": 0
+    },
+    "generic_service_pages:dalil_v2_haj.json": {
+      "loaded": 11,
+      "accepted": 11,
+      "pages_in_capture": 22,
+      "pages_http_200": 22,
+      "pages_failed_http": 0,
+      "pages_filled_by_supplement": 0,
+      "pages_error_or_empty": 0,
+      "pages_wrong_language": 0
+    },
+    "generic_service_pages:dalil_v2_hrsd.json": {
+      "loaded": 125,
+      "accepted": 125,
+      "pages_in_capture": 252,
+      "pages_http_200": 250,
+      "pages_failed_http": 2,
+      "pages_filled_by_supplement": 0,
+      "pages_error_or_empty": 0,
+      "pages_wrong_language": 0
+    },
+    "generic_service_pages:dalil_v2_moe.json": {
+      "loaded": 49,
+      "accepted": 49,
+      "pages_in_capture": 98,
+      "pages_http_200": 97,
+      "pages_failed_http": 1,
+      "pages_filled_by_supplement": 0,
+      "pages_error_or_empty": 0,
+      "pages_wrong_language": 1
+    },
+    "generic_service_pages:dalil_v2_mofa.json": {
+      "loaded": 42,
+      "accepted": 42,
+      "pages_in_capture": 84,
+      "pages_http_200": 84,
+      "pages_failed_http": 0,
+      "pages_filled_by_supplement": 0,
+      "pages_error_or_empty": 0,
+      "pages_wrong_language": 0
+    },
+    "generic_service_pages:dalil_v2_moj.json": {
+      "loaded": 151,
+      "accepted": 151,
+      "pages_in_capture": 302,
+      "pages_http_200": 302,
+      "pages_failed_http": 0,
+      "pages_filled_by_supplement": 0,
+      "pages_error_or_empty": 1,
+      "pages_wrong_language": 0
+    },
+    "generic_service_pages:dalil_v2_momah.json": {
+      "loaded": 152,
+      "accepted": 152,
+      "pages_in_capture": 302,
+      "pages_http_200": 302,
+      "pages_failed_http": 0,
+      "pages_filled_by_supplement": 0,
+      "pages_error_or_empty": 0,
+      "pages_wrong_language": 0
+    },
+    "generic_service_pages:dalil_v2_sfda.json+dalil_v2_sfda_arfix.json": {
+      "loaded": 33,
+      "accepted": 25,
+      "pages_in_capture": 66,
+      "pages_http_200": 65,
+      "pages_failed_http": 1,
+      "pages_filled_by_supplement": 25,
+      "pages_error_or_empty": 0,
+      "pages_wrong_language": 0
+    },
+    "generic_service_pages:dalil_v2_zatca.json": {
+      "loaded": 161,
+      "accepted": 161,
+      "pages_in_capture": 322,
+      "pages_http_200": 322,
+      "pages_failed_http": 0,
+      "pages_filled_by_supplement": 0,
+      "pages_error_or_empty": 0,
+      "pages_wrong_language": 0
+    },
+    "saved_pages:/home/claude/work/dalil/data/raw/manual": {
       "loaded": 0,
       "accepted": 0
     },
-    "legacy_seed_csv:/home/claude/dalil-ai/data/raw/seed/services_seed_v0.csv": {
+    "legacy_seed_csv:/home/claude/work/dalil/data/raw/seed/services_seed_v0.csv": {
       "loaded": 18,
       "accepted": 0
     }
   },
-  "services_indexed": 73,
-  "services_quarantined": 20,
-  "duplicates_removed": 0,
+  "services_indexed": 799,
+  "services_quarantined": 33,
+  "duplicates_removed": 5,
   "agencies": [
-    "Ministry of Commerce"
+    "Council of Health Insurance",
+    "Ministry of Commerce",
+    "Ministry of Education",
+    "Ministry of Foreign Affairs",
+    "Ministry of Hajj and Umrah",
+    "Ministry of Human Resources and Social Development",
+    "Ministry of Justice",
+    "Ministry of Municipalities and Housing",
+    "Saudi Food and Drug Authority",
+    "Zakat, Tax and Customs Authority"
   ],
   "page_labels_en": {
     "Merchant": 55,
@@ -46,39 +145,53 @@
     "Commercial Registration Data": 1
   },
   "source_domains": [
-    "mc.gov.sa"
+    "chi.gov.sa",
+    "haj.gov.sa",
+    "hrsd.gov.sa",
+    "mc.gov.sa",
+    "moe.gov.sa",
+    "mofa.gov.sa",
+    "moj.gov.sa",
+    "momah.gov.sa",
+    "sfda.gov.sa",
+    "zatca.gov.sa"
   ],
-  "with_arabic": 73,
-  "with_english": 73,
+  "with_arabic": 780,
+  "with_english": 799,
   "field_coverage": {
-    "title_en": 73,
-    "title_ar": 73,
+    "title_en": 799,
+    "title_ar": 780,
     "category_en": 73,
     "category_ar": 73,
-    "description_en": 73,
-    "description_ar": 73,
-    "eligibility_en": 0,
+    "description_en": 777,
+    "description_ar": 760,
+    "eligibility_en": 100,
     "eligibility_ar": 0,
-    "requirements_en": 73,
-    "requirements_ar": 73,
-    "required_documents_en": 73,
-    "required_documents_ar": 73,
-    "steps_en": 73,
-    "steps_ar": 73,
-    "fees_en": 73,
-    "fees_ar": 73,
-    "processing_time_en": 73,
-    "processing_time_ar": 73,
-    "target_audience_en": 73,
-    "target_audience_ar": 73,
-    "service_languages_en": 73,
-    "service_languages_ar": 73,
+    "requirements_en": 522,
+    "requirements_ar": 636,
+    "required_documents_en": 401,
+    "required_documents_ar": 378,
+    "steps_en": 787,
+    "steps_ar": 775,
+    "fees_en": 452,
+    "fees_ar": 437,
+    "processing_time_en": 312,
+    "processing_time_ar": 464,
+    "target_audience_en": 723,
+    "target_audience_ar": 570,
+    "service_languages_en": 587,
+    "service_languages_ar": 381,
+    "notes_en": 0,
+    "notes_ar": 0,
     "source_last_modified_en": 73,
     "source_last_modified_ar": 73
   },
-  "warnings": {},
+  "warnings": {
+    "no official Arabic text": 19,
+    "no description (other official fields present)": 16
+  },
   "date_collected_range": [
     "2026-09-30T10:07:45.854Z",
-    "2026-09-30T10:22:20.313Z"
+    "2026-10-01T06:22:34.029Z"
   ]
 }

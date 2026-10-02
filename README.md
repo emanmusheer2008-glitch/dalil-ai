@@ -2,181 +2,202 @@
 
 **A bilingual (Arabic–English) retrieval-grounded assistant for official Saudi public-service information.**
 
-Ask *"How do I convert my sole proprietorship into a company?"* or *"كم رسوم التأكيد السنوي للسجل التجاري؟"* — Dalil finds the matching official service, shows its **official text** (conditions, documents, steps, fees, duration) in your language, highlights the passages that matched, and links to the source page. If it has no verified information, it says so instead of guessing.
+Ask a natural question in Arabic or English (*"How can I reserve a trade name?"*, «كيف أعادل شهادتي؟»). Dalil finds the matching official service pages across 10 government agencies, shows a structured answer built **only from verbatim official text** with numbered citations and links, and declines when its sources don't cover the question.
 
-> **Live demo:** _link to be added after deployment (see [Deployment](#deployment))_
->
-> Dalil AI is an independent educational project and is **not** an official Saudi government service. Always verify important information through the linked official source.
-
-| Arabic question → official Arabic answer | Evaluation dashboard |
-|---|---|
-| ![Arabic answer](assets/screenshots/ask_ar.png) | ![Evaluation](assets/screenshots/evaluation.png) |
+> **Disclaimer.** Dalil AI is an independent educational project and is **not affiliated with or endorsed by the Government of Saudi Arabia**. Always confirm details on the official page linked in each answer.
+> **إخلاء مسؤولية:** «دليل» مشروع تعليمي مستقل، وليس تابعاً للحكومة السعودية أو معتمداً منها. يُرجى التحقق دائماً من الصفحة الرسمية المرفقة بكل إجابة.
 
 ---
 
-## Why
+## The problem
 
-Saudi public-service information is spread across many official websites, in two languages and in administrative wording. People rarely know a service's official name ("I want to reserve a name for my shop" → *Trade Name Reservation*). General chatbots answer fluently but can invent fees or documents — unacceptable for government procedures. Dalil explores a narrower, safer idea:
+To find out how to do something (reserve a trade name, attest a document, get a building permit), a person has to know **which ministry** handles it, the **official service name**, and the **government wording** each site uses. Dalil's goal: **ask once, in your own words, instead of searching several government websites.**
 
-> **Research question (independent engineering experiment):** *How effectively can multilingual semantic retrieval provide grounded Arabic–English access to Saudi public-service information?*
+## What Dalil is (and is not)
 
-## What it does — and doesn't
+- **Is:** a *retrieval-grounded* assistant. It retrieves and organises official passages. Every fact on screen is a verbatim sentence or list item from a captured official page, with a citation `[n]`, the official URL and the capture date.
+- **Is not:** a generative chatbot. No large language model writes the answers. This is deliberate: zero running cost, no API dependency, and nothing a model could make up (fees, documents, deadlines). Dalil adds only headings and one templated lead sentence ("The matching official service is …").
+- **Does not** cover every Saudi government service (see *Coverage* and *Limitations*).
 
-- ✅ Answers questions over the **currently indexed official corpus**: **73 Ministry of Commerce e-services**, each with official **English and Arabic** text (captured 30 Sep 2026).
-- ✅ Shows only fields the official page states; never fills gaps.
-- ✅ Cites every answer (official URL in both languages, capture date, page's last-modified date).
-- ✅ Declines unsupported questions using a threshold **calibrated on data**.
-- ❌ Does **not** cover all Saudi government services.
-- ❌ Does **not** generate text with a language model. It is a *retrieval-grounded* assistant, i.e. the retrieval half of RAG — not "generative RAG".
-- ❌ No paid APIs, databases or hosting. Total cost: **$0**.
+## Results (held-out test split, final corpus)
 
-## Architecture
+All numbers come from `python -m src.evaluation.evaluate_v2` (`data/evaluation/results_v2.json`). Settings and thresholds were chosen on the dev+val splits only.
+
+| Metric (test: 120 answerable + 21 unanswerable questions) | V1 setting on the same corpus | **V2 (final)** |
+|---|---|---|
+| Top-1 retrieval (right service ranked first) | 70.0 % | **81.7 %** |
+| Top-3 retrieval | 84.2 % | **93.3 %** |
+| MRR | 0.780 | **0.884** |
+| Answerable questions shown with the right service first | 60.8 % | **74.2 %** |
+| False-refusal rate (answerable but declined) | 26.7 % | **17.5 %** |
+| Confident answers that are correct | 100 % (1 confident answer only) | **91.9 %** (51.7 % of answerable are confident) |
+| Unanswerable questions declined | 66.7 % | **61.9 %** |
+| Unanswerable questions answered *confidently* | 0 % | **4.8 %** (1 of 21) |
+| Answerable questions where the right service is shown (answer **or** "related official services" link) | — | **83.3 %** (100 of 120) |
+
+By language (test, Top-1 / Top-3): **Arabic 86.8 % / 98.1 %** (n=53) · **English 79.4 % / 90.5 %** (n=63) · mixed Arabic/English 50 % / 75 % (n=4, too few to conclude).
+Paraphrase robustness: in **85 %** of test families *every* phrasing finds the right service in the top 3 (V1 setting: 72 %).
+Leakage checks: questions written *after* the vocabulary list was frozen reach Top-1 81.8 % (n=66), and switching query expansion off gives Top-1 79.2 %. The improvement is not coming from the vocabulary list.
+
+**The trade-name question that V1 refused** ("How can I reserve a trade name?") now ranks Trade Name Reservation first and is shown as a *possible match* (score 0.382, confident threshold 0.391). "I want to book a business name" gets a confident answer.
+
+**Speed** (2-core cloud CPU): cold start 4.7 s (was 8.7 s before caching the lexical index), full answer **92 ms median** (p95 0.4 s), repeated question 14 ms.
+
+**Tests:** `python -m pytest` → **90 passed, 0 failed, 0 xfailed, 0 skipped**.
+
+Historical V1 (73 Commerce services, 129-question benchmark): Top-1 69.6 %, Top-3 82.6 %, MRR 0.780, kept in `data/evaluation/v1_baseline/`. **Those are V1 numbers, not V2's.**
+
+## Coverage
+
+| Agency | Services indexed | Official Arabic text | Notes |
+|---|---|---|---|
+| Zakat, Tax and Customs Authority (ZATCA) | 161 | 161 | |
+| Ministry of Municipalities and Housing (MoMAH) | 150 | 148 | 2 duplicates removed |
+| Ministry of Justice (MoJ) | 148 | 148 | 3 duplicates removed |
+| Ministry of Human Resources and Social Development (HRSD) | 125 | 125 | 1 service's pages returned 404 |
+| Ministry of Commerce (MC) | 73 | 73 | 2 pages with only placeholders quarantined |
+| Ministry of Education (MoE) | 49 | 47 | 1 Arabic page failed, 1 rejected by the language check |
+| Ministry of Foreign Affairs (MOFA) | 42 | 42 | |
+| Saudi Food and Drug Authority (SFDA) | 25 | 25 | 8 pages with no real content quarantined |
+| Council of Health Insurance (CHI) | 15 | 0 | Arabic pages captured but not exported in this version |
+| Ministry of Hajj and Umrah | 11 | 11 | |
+| **Total** | **799** | **780** | 8,188 evidence chunks (4,126 EN / 4,062 AR) |
+
+Captured 30 Sep – 1 Oct 2026. **Not covered** (blocked or unreachable, never bypassed): Ministry of Interior / Absher (passports inside the Kingdom, iqama, national ID, traffic), Ministry of Health, GOSI, Transport General Authority, my.gov.sa, MISA.
+
+## How it works
 
 ```mermaid
-flowchart TD
-    A[Official Saudi source<br/>mc.gov.sa service pages, EN + AR] --> B[Capture<br/>normal browser, low rate, SHA-256]
-    B --> C[Ingestion<br/>parse · normalise Unicode · validate · de-duplicate]
-    C -->|unverified / incomplete| Q[(Quarantine<br/>kept, never indexed)]
-    C --> D[(Structured knowledge base<br/>services.jsonl)]
-    D --> E[Section chunks per language<br/>overview · conditions · documents · steps · fees]
-    E --> F[Multilingual embeddings<br/>MiniLM-L12, 384-d, normalised]
-    F --> G[(Cached vector index<br/>embeddings.npy + fingerprint)]
-    U[Arabic / English question] --> H
-    G --> H[Hybrid retrieval<br/>0.4·dense + 0.6·TF-IDF char n-grams<br/>max-pooled per service]
-    H --> I{Top score ≥ calibrated<br/>threshold?}
-    I -- no --> R[“Not enough verified information”]
-    I -- yes --> J[Grounded answer<br/>official fields in user's language]
-    J --> K[Evidence passages + official URL + capture date]
+flowchart TB
+  subgraph Offline["Offline: build the knowledge base (python -m src.indexing.build_index)"]
+    A["Official service pages<br/>10 agencies, EN + AR<br/>captured in a normal browser, ~2 s apart"] --> B["Raw captures (unchanged)<br/>data/raw/official/…"]
+    B --> C["Source-aware parsing<br/>tabs · headings · label/value pairs"]
+    C --> D["Normalise · validate (gov.sa, HTTPS, language)<br/>de-duplicate · quarantine"]
+    D --> E["Knowledge base<br/>services.jsonl (799)"]
+    E --> F["Section chunks + title chunks<br/>chunks.csv (8,188)"]
+    F --> G["Multilingual embeddings (cached)<br/>+ char-n-gram TF-IDF (cached)"]
+  end
+  subgraph Online["Online: one question (src/engine.py)"]
+    Q["Question (AR / EN / mixed)"] --> X["Vocabulary expansion<br/>everyday → official terms"]
+    X --> R["Hybrid retrieval<br/>0.3·dense + 0.3·char-n-grams + 0.1·title coverage"]
+    G --> R
+    R --> P["Max-pool chunks per service → ranked services"]
+    P --> T{"Calibrated decision"}
+    T -->|"score ≥ 0.391"| S["Answer"]
+    T -->|"0.285 – 0.391"| M["Possible match + warning"]
+    T -->|"0.200 – 0.285"| L["Decline + related official services (links only)"]
+    T -->|"< 0.200"| N["Decline politely"]
+    S --> Y["Grounded synthesis: verbatim official passages,<br/>sections, [n] citations, official links"]
+    M --> Y
+  end
 ```
 
-## Data & provenance
+In plain words: **question → add official synonyms → search every chunk of every service in two ways (meaning and spelling) → pick the best services → decide how sure we are → show only official text, with sources.**
 
-| | |
-|---|---|
-| Source | Ministry of Commerce e-services catalogue, `mc.gov.sa` (75 service-detail pages × English + Arabic = 150 pages, all HTTP 200) |
-| Indexed | **73 services**, **730 chunks** (365 EN / 365 AR) |
-| Quarantined | 2 MC pages with no description on the official page; 18 hand-written prototype seed records (not traceable to captured text) |
-| Per record | official URLs (EN/AR), capture timestamp, SHA-256 of captured HTML, source "last modified" date, verification status |
-
-**How the data was obtained.** `my.gov.sa` refuses automated requests (HTTP 403 / Cloudflare), so it was **not** used — Dalil never bypasses access controls. The Ministry of Commerce publishes the same kind of information openly; its public pages were captured from a normal browser session at roughly one request every few seconds with [`scripts/browser_capture_mc.js`](scripts/browser_capture_mc.js), storing the page HTML verbatim. Parsing happens in tested Python ([`src/ingestion/mc_catalog.py`](src/ingestion/mc_catalog.py)). Full details: [docs/data_provenance.md](docs/data_provenance.md).
-
-**Adding more sources** needs no new code: save official pages from a browser into `data/raw/manual/` with a small `.meta.json` ([document_loader.py](src/ingestion/document_loader.py)), or drop an official open-data file plus a column mapping into `data/raw/open_data/` ([official_open_data.py](src/ingestion/official_open_data.py)).
-
-## Retrieval method
-
-1. **Chunking** — each service is split per language into overview / conditions / required documents / steps / fees & details. Each chunk keeps service id, title, agency, section, language and URL.
-2. **Dense** — `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (free, CPU). Vectors are L2-normalised so cosine similarity is a dot product. **No FAISS**: exact NumPy search over 730 vectors is sub-millisecond.
-3. **Lexical** — TF-IDF over character 3–5-grams after Arabic normalisation (alef/ya/taa-marbuta unification, diacritics removed), which copes with Arabic prefixes/suffixes.
-4. **Hybrid** — `α·dense + (1−α)·lexical`; chunk scores max-pooled per service (also removes duplicates).
-5. **Refusal** — answer only if the top score ≥ threshold.
-6. **Answer composer** — official fields in the question's language (if that official version exists; otherwise the original is shown with a note — never a machine translation), matching passages, links.
-
-## Evaluation
-
-Benchmark: **129 questions** — 93 answerable (44 English, 44 Arabic, 5 mixed Arabic/English; paraphrased and "hard" low-keyword-overlap wording) and 36 unanswerable (12 out-of-domain, 24 *real government services that are not indexed*, e.g. passports, VAT, GOSI). It was written before running retrieval ([how](data/evaluation/make_benchmark.py)) and split by service into a **calibration** half (used to choose the method, α and threshold) and a **held-out test** half (used only for reporting). Everything below is produced by `python -m src.evaluation.evaluate` → [`data/evaluation/results.json`](data/evaluation/results.json).
-
-**Method comparison (test half, 46 answerable questions)**
-
-| Method | Top-1 | Top-3 | MRR |
-|---|---|---|---|
-| Lexical (TF-IDF char n-grams) | 69.6% | 84.8% | 0.776 |
-| Dense (multilingual embeddings) | 58.7% | 78.3% | 0.710 |
-| **Hybrid α=0.4 (selected on calibration)** | **69.6%** | **82.6%** | **0.780** |
-
-Hybrid was clearly best on the calibration half (MRR 0.834 vs 0.725 lexical, 0.673 dense). On the test half it ties lexical on Top-1; α=0.5 would have scored higher on test (76.1% / 0.821) but was not chosen, because choosing by test results would inflate the numbers.
-
-**By language (test, selected method):** Arabic Top-1 72.7% (n=22) · English Top-1 63.6%, Top-3 90.9% (n=22) · mixed 2/2.
-
-**Cross-lingual experiment** (all 44 Arabic / 44 English answerable questions, searching only the *other* language's text):
-
-| Setting | Lexical Top-1 | Dense Top-1 |
-|---|---|---|
-| Arabic question → English text only | 2.3% | **59.1%** |
-| English question → Arabic text only | 4.5% | **29.5%** |
-
-Keyword matching cannot cross languages; multilingual embeddings can — though far better Arabic→English than English→Arabic in this model. Having official text in *both* languages matters: Arabic→Arabic hybrid reaches 75.0% Top-1.
-
-**Refusal (test half, threshold 0.424 chosen on calibration by balanced accuracy):** 16/16 unanswerable questions declined (100%, both out-of-domain and not-indexed), but only **50%** of answerable questions were answered with the correct service; the rest were mostly declined. Dalil is deliberately cautious — the dashboard's threshold curve shows the trade-off.
-
-**Latency:** mean 19 ms, p95 22 ms per query (hybrid search incl. query embedding) on a 2-vCPU Linux cloud container.
+Technical details:
+- **Embeddings:** `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384-d, Apache-2.0), L2-normalised, exact cosine search in NumPy. FAISS isn't needed at 8k vectors (it also failed to install on Windows in V1).
+- **Lexical:** TF-IDF over character 3–5-grams with Arabic orthographic normalisation; robust to Arabic prefixes and suffixes and to misspellings.
+- **Title coverage:** the share of a service title's words present in the query. It ranks down sibling services whose titles add words the user didn't say ("Extension of…").
+- **Query expansion:** a small, general bilingual vocabulary (`src/retrieval/lexicon.py`, e.g. "business name" → "trade name", «أطلع» → «إصدار»). It contains no question-to-answer mappings and is applied to the lexical signals only.
+- **BM25** was implemented and evaluated, but the dev+val selection gave it weight 0, so it is not used in the final configuration.
+- **Related official services:** when Dalil declines but the question is still about public services (score ≥ 0.200, set just above the highest *out-of-domain* dev+val score), it lists up to 3 closest official services as **links only**, never their fees or steps as the answer. Test: 17 of 21 declined answerable questions got related links, 11 of them including the right service; 2 out-of-domain test questions also got links.
+- **Decision:** two thresholds fitted on dev+val: decline below the one that keeps ≥80 % of unanswerable questions declined, and answer confidently above the one where ≥90 % of confident answers are correct.
+- **Synthesis:** up to three close services. Sections (direct answer, what you need, documents, steps, fees & processing, who it is for, important notes, sources) appear only if the source states them. Question intent (fees / time / documents / steps) puts the relevant section first. Conflicting fees across agencies are flagged, and if official text exists only in the other language, a note says so (no machine translation).
 
 ## Run it
 
+Requires Python 3.11+ (tested on 3.11 Linux; V1 ran on 3.13 Windows).
+
 ```bash
-git clone <your-repo-url> dalil-ai && cd dalil-ai
+# 1) environment
 python -m venv .venv
-.venv\Scripts\activate            # Windows  (macOS/Linux: source .venv/bin/activate)
-pip install -r requirements-dev.txt
+.venv\Scripts\activate            # Windows   |   source .venv/bin/activate  (macOS/Linux)
+pip install -r requirements-dev.txt   # runtime deps + pytest
 
-streamlit run app.py              # uses the prebuilt index in data/processed/
+# 2) run the app (uses the prebuilt knowledge base and index in data/processed/)
+streamlit run app.py
+
+# 3) ask from the command line
+python -m src.engine "How can I reserve a trade name?"
+python -m src.engine "كيف أعادل شهادتي الجامعية؟"
+
+# 4) tests
+python -m pytest
 ```
 
-The model (~470 MB) downloads from Hugging Face on first run and is cached. To use a local copy instead, set `DALIL_MODEL_PATH` to its folder.
+The first run downloads the embedding model (~470 MB) from Hugging Face and caches it.
 
-Rebuild everything from the raw capture:
+**Rebuild everything from raw captures** (only needed if the raw files are present; see *Data* below):
 
 ```bash
-python -m src.indexing.build_index        # ingest → validate → chunk → embed (cached)
-python -m src.evaluation.evaluate          # benchmark, calibration, results.json
-python -m pytest                           # 53 tests (unit + integration with the real model)
+python -m src.indexing.build_index            # parse → validate → knowledge base → chunks → embeddings (incremental)
+python data/evaluation/make_benchmark_v2.py   # regenerate benchmark_v2.csv
+python -m src.evaluation.evaluate_v2          # grid search on dev, select on dev+val, report on test
 ```
 
-## Tests
-
-`pytest` covers schema validation, all loaders, missing values (never invented), duplicate detection, Arabic Unicode normalisation and UTF-8, chunk metadata/citation preservation, retrieval (dense/lexical/hybrid, language filtering, de-duplication), the answer composer (refusal, official-text-only fields, Arabic fallback note), metrics, index caching and stale-cache detection, plus end-to-end integration tests with the real model. Current status: **52 passed, 1 expected failure** (a documented Arabic ranking weakness, below).
-
-## Project structure
+## Data and provenance
 
 ```
-app.py                      Streamlit app (Ask · Explore · Knowledge base · Evaluation · About)
-src/
-  config.py  schema.py  ui.py
-  ingestion/   mc_catalog.py  document_loader.py  official_open_data.py  csv_loader.py
-               json_loader.py  normalization.py  validation.py  pipeline.py
-  indexing/    chunking.py  build_index.py
-  retrieval/   embedder.py  lexical.py  retriever.py
-  answering/   composer.py
-  evaluation/  metrics.py  evaluate.py
-  utils/       arabic.py
 data/
-  raw/official/mc/mc_services_capture.json   captured official pages (EN + AR)
-  raw/seed/services_seed_v0.csv               original prototype seed (quarantined)
-  processed/   services.jsonl/.csv  chunks.csv  embeddings.npy  index_meta.json
-               build_report.json  quarantine.jsonl  retrieval_config.json
-  evaluation/  make_benchmark.py  benchmark.csv  results.json  per_query_results.csv
-scripts/browser_capture_mc.js                 reproducible capture script
-docs/        methodology.md  data_provenance.md  architecture.md  DEVELOPMENT_LOG.md  CV_BULLETS.md  archive/
-tests/       unit + integration tests
-LEARNING_GUIDE.md
+  raw/official/mc/                 Ministry of Commerce capture (V1)
+  raw/official/v2/                 dalil_v2_<agency>.json captures (+ _arfix supplements)   ← not in git
+  raw/seed/                        the 18 hand-written V0 records (quarantined, kept for history)
+  processed/services.jsonl         the verified knowledge base (one record per service)
+  processed/chunks.csv             section-level evidence chunks
+  processed/embeddings.npy         cached embeddings (fingerprinted)
+  processed/quarantine.jsonl       everything excluded, with the reason
+  processed/build_report.json      per-agency page statistics and field coverage
+  evaluation/                      benchmarks, results, per-question results, V1 baseline
 ```
 
-## Limitations
+Each record keeps: agency, official EN/AR URLs, capture time, a SHA-256 of each captured page, verification status, and which supplement file (if any) supplied a page. Missing fields stay empty and are never filled in.
 
-- **Coverage:** one ministry, 73 services. Questions about other agencies are declined, not answered.
-- **Cautious refusal:** with a single similarity threshold, about half of answerable test questions are declined along with all unanswerable ones.
-- **Near-duplicate services:** e.g. in Arabic, *reserve / extend / cancel a trade-name reservation* share the phrase «حجز اسم تجاري»; the base service can be outranked (recorded as an expected test failure).
-- **Benchmark:** 129 questions written by the project author with AI assistance; not independent, and small (±7–10 percentage points of noise on the test half).
-- **Freshness:** official pages change; answers show capture and last-modified dates, and data should be re-captured periodically.
-- **Dialects:** tested with Modern Standard and some Saudi colloquial Arabic only.
+**Raw captures are not committed to git.** Redistribution rights for verbatim government page HTML are unclear, and the files total about 200 MB. `scripts/browser_capture_v2.js` and `docs/data_provenance.md` explain how they were collected and how to re-collect them. See *Before publishing* for the processed data.
+
+## Project layout
+
+```
+app.py                     Streamlit app (Ask · Explore · Knowledge base · Evaluation · About)
+src/engine.py              single entry point: question → search → decision → answer (app, tests, CLI)
+src/ingestion/             loaders, generic bilingual service-page parser, normalisation, validation, pipeline
+src/indexing/              chunking, incremental embedding build
+src/retrieval/             embedder, char-n-gram TF-IDF, BM25, lexicon, hybrid retriever
+src/answering/             synthesizer (V2), composer (V1, kept for the baseline)
+src/evaluation/            V1 evaluation, V2 evaluation (grid, thresholds, leakage checks, latency)
+scripts/                   browser capture scripts (MC, generic V2)
+tests/                     90 tests (parsers, regressions, Arabic, retrieval, grounding, integration)
+docs/                      development log, methodology, architecture, provenance, report material
+```
 
 ## Responsible AI
 
-Official text only (no generated facts, no machine translation labelled as official) · source link and dates on every answer · calibrated refusal · quarantine for unverifiable data · no bypassing of access controls · no user accounts, no query logging, Streamlit telemetry disabled · no secrets in the repository.
+- **Grounding:** a test asserts that every point shown occurs verbatim in the cited record.
+- **Calibrated uncertainty:** answer / possible match / decline, with thresholds fitted on held-out data and the trade-offs reported (including the 4.8 % of unanswerable questions answered confidently).
+- **No bypassing** of anti-bot protection, logins or rate limits. Sites that blocked access are listed as coverage gaps.
+- **No machine translation** presented as official text. A language check rejects an "Arabic" page that isn't Arabic.
+- **Honest scope:** coverage numbers are computed from the knowledge base and shown in the app, and the disclaimer appears on every page.
+
+## Limitations
+
+- 799 services from 10 agencies, **not all Saudi government services**. Interior/Absher, Health and GOSI are missing.
+- **Everyday Interior/Absher topics are missing** (iqama renewal, traffic/parking fines, passports inside the Kingdom, national ID): my.gov.sa blocks the browser with Cloudflare, absher.sa does not resolve and moi.gov.sa errors from the capture connection, and MOH runs a bot check. They were not bypassed. Such questions get lookalike "possible matches" or related links (e.g. iqama → MOFA Passport Renewal), which is the clearest current weakness.
+- Questions about *nearby* services that aren't indexed often get a "possible match" from a lookalike service; only 62 % of unanswerable test questions are fully declined.
+- Sibling services are the main error (e.g. "register my company for VAT" → "VAT Registration Verification").
+- Arabic verb/noun forms («أستعلم» vs «الاستعلام») can cause false refusals. Colloquial phrasing scores lower than formal (Top-1 75 % vs 87 %).
+- The benchmark was written by the author with AI assistance. Independent native-speaker questions would make it stronger. The unanswerable test set is small (21).
+- Official pages change; answers show their capture date and the data must be re-captured periodically.
+- CHI services are English-only in this version.
 
 ## Deployment
 
-Free target: **Streamlit Community Cloud** (free for public and private GitHub repos; ~2.7 GB RAM, enough for the model). Steps:
+Localhost now. Deployment-ready for **Streamlit Community Cloud** (free): no secrets, relative paths only, CPU-only PyTorch, prebuilt index committed. See `docs/DEPLOYMENT.md`.
 
-1. Push this repository to GitHub (check [docs/data_provenance.md](docs/data_provenance.md) on redistribution first).
-2. At share.streamlit.io → *Create app* → pick the repo, branch, `app.py`.
-3. First boot downloads the model (a few minutes). The app sleeps after 12 h without traffic and wakes on the next visit.
+**Before publishing the repository publicly**, decide on the processed data (it contains verbatim official text). See `docs/DEPLOYMENT.md` → *Data licence decision*.
 
-No secrets or environment variables are required.
+## Documentation
 
-## Future work
+`PROJECT_REPORT.md` (final report) · `LEARNING_GUIDE.md` (concepts + interview Q&A) · `docs/DEVELOPMENT_LOG.md` · `docs/methodology.md` · `docs/architecture.md` · `docs/data_provenance.md` · `docs/MANUAL_ACCEPTANCE_TESTS.md` · `docs/DEPLOYMENT.md` · `docs/CV_BULLETS.md` · `docs/PORTFOLIO.md`
 
-Official open-data feeds of services · more agencies via saved official pages · independent native-speaker benchmark · a cross-encoder re-ranker for near-duplicate services · per-query-type thresholds · an optional generator constrained to quote retrieved chunks (true RAG).
+## Screenshots
 
-## Author
-
-Independent AI engineering project (2026) by a student preparing for AI Engineering / Data Science study. Built with AI coding assistance; every design decision, data source and metric is documented and reproducible. See [docs/DEVELOPMENT_LOG.md](docs/DEVELOPMENT_LOG.md) and [LEARNING_GUIDE.md](LEARNING_GUIDE.md).
+`assets/screenshots/`: `ask_en.png` (trade-name answer), `ask_ar.png` (Arabic, RTL), `ask_related.png` (no exact answer → related services), `ask_refusal.png`, `ask_mobile_ar.png`, `explore.png`, `knowledge-base.png`, `evaluation.png`, `about.png`.
