@@ -59,13 +59,13 @@ from src.answering.synthesizer import query_language
 from src.ingestion.pipeline import load_services
 from src.ui import T as UI_TEXT
 
-API_VERSION = "3.0.0"
-RUNTIMES = ("lite", "full")
+API_VERSION = "4.0.0"
+RUNTIMES = ("v4", "lite", "full")
 
 
 def selected_runtime() -> str:
-    rt = os.environ.get("DALIL_RUNTIME", "lite").strip().lower() or "lite"
-    return rt if rt in RUNTIMES else "lite"
+    rt = os.environ.get("DALIL_RUNTIME", "v4").strip().lower() or "v4"
+    return rt if rt in RUNTIMES else "v4"
 
 
 
@@ -114,9 +114,13 @@ class EngineState:
                 if self.runtime == "full":
                     from src.engine import Dalil  # heavy imports (torch, sentence-transformers) happen here
                     d = Dalil(records=self.records or None)
-                else:
+                elif self.runtime == "lite":
                     from src.lite.engine import DalilLite      # numpy / scikit-learn only
                     d = DalilLite(records=self.records or None)
+                else:
+                    from src.lite.engine import DalilLite
+                    from src.v4.engine import DalilV4          # + stdlib HTTP client for Gemini
+                    d = DalilV4(DalilLite(records=self.records or None))
                 d.warm_up()
                 self.engine = d
                 self.records = d.records
@@ -140,7 +144,13 @@ class EngineState:
         self._ready.wait(timeout)
         return self.status == "ready"
 
-    def ask(self, question: str, ui_lang: str | None, context_service_id: str | None = None):
+    def ask(self, question: str, ui_lang: str | None, context_service_id: str | None = None,
+            conversation: list | None = None, use_ai: bool | None = None):
+        if self.runtime == "v4":          # Gemini is a network call: don't hold the lock for it
+            with self._ask_lock:
+                self.asks += 1
+            return self.engine.ask(question, ui_lang=ui_lang, context_service_id=context_service_id,
+                                   conversation=conversation, use_ai=use_ai)
         with self._ask_lock:
             self.asks += 1
             if self.runtime == "full":    # V2 engine is single-turn; context is ignored
@@ -243,6 +253,17 @@ def _norm(s: str | None) -> str:
     return normalize_for_matching(s or "")
 
 
+def _ai_info() -> dict | None:
+    eng = STATE.engine
+    if STATE.runtime != "v4":
+        return None
+    from src.v4.gemini import api_key, model_name   # never returns or logs the key itself
+    return {"provider": "Google Gemini API", "model": model_name(), "configured": api_key() is not None,
+            "enabled": bool(eng and eng.ai_available),
+            "role": "language only: understands the question and writes answers from cited official evidence; "
+                    "never a factual source. Falls back to verbatim official text if unavailable."}
+
+
 # ============================================================== endpoints ==
 @app.get("/", tags=["meta"])
 def root() -> dict[str, Any]:
@@ -275,7 +296,7 @@ def info() -> dict[str, Any]:
     recs = STATE.records
     meta = _read_json(config.INDEX_META_JSON) or {}
     rep = _read_json(config.BUILD_REPORT_JSON) or {}
-    lite = STATE.runtime == "lite"
+    lite = STATE.runtime in ("lite", "v4")
     cfg = _read_json(config.PROCESSED_DIR / "retrieval_config_v3.json" if lite else config.RETRIEVAL_CONFIG_V2_JSON) or {}
     static = (_read_json(config.PROCESSED_DIR / "static_vocab.json") or {}) if lite else {}
     rng = rep.get("date_collected_range") or [None, None]
@@ -292,8 +313,12 @@ def info() -> dict[str, Any]:
             "weights": cfg.get("params"),
             "thresholds": {"answer": cfg.get("t_answer"), "possible_match": cfg.get("t_tentative"),
                            "related": cfg.get("t_related")},
-            "follow_up_context": "stateless: send context_service_id with /ask",
+            "follow_up_context": "stateless: send context_service_id (and, for v4, conversation_context) with /ask",
         }
+        if STATE.runtime == "v4":
+            v4cfg = _read_json(config.PROCESSED_DIR / "v4_config.json") or {}
+            retrieval["runtime"] = "v4 (V3 lite retrieval + action-aware rerank + optional grounded AI layer)"
+            retrieval["action_rerank"] = {"bonus": v4cfg.get("action_bonus"), "penalty": v4cfg.get("action_penalty")}
     else:
         retrieval = {
             "runtime": "full (V2)",
@@ -330,7 +355,7 @@ def info() -> dict[str, Any]:
             "related_services": "no answer; closest official services returned as links only",
             "unsupported": "outside Dalil's official sources",
         },
-        "generative_model": None,
+        "generative_model": _ai_info(),
         "disclaimer": UI_TEXT["en"]["disclaimer"],
     }
 
@@ -343,31 +368,57 @@ def ask(req: AskRequest) -> AskResponse:
         raise HTTPException(status_code=503, detail="Dalil engine is not ready yet. Please retry shortly.")
     t0 = time.perf_counter()
     ui_lang = None if req.language == "auto" else req.language
-    ans = STATE.ask(req.question, ui_lang, req.context_service_id)
+    conv = [t.model_dump() for t in req.conversation_context or []]
+    res = STATE.ask(req.question, ui_lang, req.context_service_id, conv, req.use_ai)
     ms = (time.perf_counter() - t0) * 1000
+    v4 = res if STATE.runtime == "v4" else None
+    ans = v4.base if v4 else res
     th = ans.thresholds or {}
+    ai_text = bool(v4 and v4.text_origin != "official_verbatim")
+    sections = v4.sections if ai_text else ans.sections
+    sources = v4.sources if ai_text else ans.citations
+    evidence = v4.evidence if ai_text else ans.evidence
+    related = v4.related if v4 else ans.related
+    if v4:
+        rtype = {"grounded_answer": "answer", "partial_answer": "answer", "possible_match": "possible_match",
+                 "related_services": "related_services"}.get(v4.response_mode,
+                                                             "related_services" if related else "unsupported")
+    else:
+        rtype = _response_type(ans)
     return AskResponse(
         question=req.question,
         detected_language=query_language(req.question),
         answer_language=ans.ui_lang,
-        response_type=_response_type(ans),
+        response_type=rtype,
         engine_status=ans.status,
         message=ans.message,
         lead=ans.lead,
         intent=ans.intent,
         sections=[AnswerSection(key=s.key, title=s.title, ordered=s.ordered,
                                 points=[AnswerPoint(text=p.text, citation=p.cite, label=p.label) for p in s.points])
-                  for s in ans.sections],
-        sources=[_source(c) for c in ans.citations],
-        related_services=[_source(c) for c in ans.related],
-        notes=list(ans.notes),
+                  for s in sections],
+        sources=[_source(c) for c in sources],
+        related_services=[_source(c) for c in related],
+        notes=list(ans.notes) if not ai_text else [],
         evidence=[Evidence(citation=e[0], section=e[1], text=e[2], score=round(float(e[3]), 4), language=e[4])
-                  for e in ans.evidence],
+                  for e in evidence],
         top_score=None if ans.top_score is None else round(float(ans.top_score), 4),
         thresholds=Thresholds(answer=th.get("answer"), possible_match=th.get("tentative"), related=th.get("related")),
         latency_ms=round(ms, 1),
-        context_service_id=getattr(ans, "context_service_id", None),
+        context_service_id=(v4.context_service_id if v4 else getattr(ans, "context_service_id", None)),
         runtime=STATE.runtime,
+        response_mode=v4.response_mode if v4 else None,
+        answer=v4.answer if v4 else None,
+        text_origin=v4.text_origin if v4 else "official_verbatim",
+        ai_enabled=bool(v4 and v4.ai_enabled),
+        ai_used=bool(v4 and v4.ai_used),
+        ai_model=(STATE.engine.client.model if v4 and v4.ai_enabled else None),
+        ai_fallback_reason=v4.ai_error if v4 else None,
+        verified_fields=v4.verified_fields if v4 else [],
+        unverified_information=v4.unverified if v4 else [],
+        follow_up_suggestions=v4.follow_ups if v4 else [],
+        search_queries=v4.search_queries if v4 else [],
+        redactions_applied=v4.redactions if v4 else 0,
         disclaimer=UI_TEXT[ans.ui_lang]["disclaimer"],
     )
 
@@ -458,7 +509,22 @@ def stats() -> dict[str, Any]:
                 "runtime": STATE.runtime},
     }
     r3 = _read_json(config.EVAL_DIR / "results_v3.json") or {}
-    if STATE.runtime == "lite" and r3:
+    r4 = _read_json(config.EVAL_DIR / "results_v4.json") or {}
+    if STATE.runtime == "v4" and r4:
+        out["evaluation"] = {
+            "runtime_evaluated": "v4 deterministic retrieval (V3 + action rerank); AI layer evaluated separately",
+            "source": "data/evaluation/results_v4.json (same benchmark and held-out test split as V2/V3)",
+            "generated_at": r4.get("generated_at"),
+            "selected_action_rerank": r4.get("selected"),
+            "test_retrieval": (r4.get("v4") or {}).get("test"),
+            "test_retrieval_by_language": (r4.get("v4") or {}).get("test_by_language"),
+            "test_decision": (r4.get("v4") or {}).get("test_decision"),
+            "v3_reference_test": {"retrieval": (r4.get("v3") or {}).get("test"),
+                                  "decision": (r4.get("v3") or {}).get("test_decision")},
+            "ai_evaluation": _read_json(config.EVAL_DIR / "results_v4_ai.json"),
+        }
+        return out
+    if STATE.runtime in ("lite", "v4") and r3:
         v3 = r3.get("v3_test") or {}
         out["evaluation"] = {
             "runtime_evaluated": "lite (V3) -- the runtime serving this API",

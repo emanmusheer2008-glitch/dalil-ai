@@ -76,7 +76,7 @@ def test_lite_process_does_not_import_torch():
 # ------------------------------------------------------------ metadata ---
 def test_health_info_identify_lite(client):
     h = client.get("/health").json()
-    assert h["status"] == "ok" and h["runtime"] == "lite" and h["version"].startswith("3.")
+    assert h["status"] == "ok" and h["runtime"] == "lite" and h["version"].split(".")[0] in ("3", "4")
     info = client.get("/info").json()
     assert info["runtime"] == "lite"
     assert info["retrieval"]["transformer_loaded_at_runtime"] is False

@@ -190,7 +190,7 @@ docs/                      development log, methodology, architecture, provenanc
 
 ## HTTP API (for a web/mobile frontend)
 
-`python -m uvicorn api.main:app --port 8000`, then open `/docs`. `POST /ask` returns a structured, cited answer with `response_type` = `answer` | `possible_match` | `related_services` | `unsupported`. `GET /services`, `/services/{id}`, `/agencies`, `/info`, `/stats` and `/health` are also available. By default the API runs the **V3 lite runtime** (no PyTorch, ~0.3 GB RAM, free-tier hosting; `DALIL_RUNTIME=full` serves the V2 transformer engine). Supports stateless follow-ups via `context_service_id`. See `docs/API.md`, `docs/V3_LITE.md` (V2 vs V3 evaluation) and `docs/DEPLOYMENT.md` (Render Free: `render.yaml`, `requirements-prod.txt`).
+`python -m uvicorn api.main:app --port 8000`, then open `/docs`. `POST /ask` returns a structured, cited answer with `response_type` = `answer` | `possible_match` | `related_services` | `unsupported`. `GET /services`, `/services/{id}`, `/agencies`, `/info`, `/stats` and `/health` are also available. By default the API runs **V4** (V3 lite retrieval + action-aware rerank + an optional grounded Gemini layer that writes answers only from cited official evidence; see `docs/V4.md`). `DALIL_RUNTIME=lite` serves plain V3 (no PyTorch, ~0.3 GB RAM, free-tier hosting; `DALIL_RUNTIME=full` serves the V2 transformer engine). Supports stateless follow-ups via `context_service_id`. See `docs/API.md`, `docs/V3_LITE.md` (V2 vs V3 evaluation) and `docs/DEPLOYMENT.md` (Render Free: `render.yaml`, `requirements-prod.txt`).
 
 ## Deployment
 

@@ -1,0 +1,6 @@
+{
+  "action_bonus": 0.02,
+  "action_penalty": 0.03,
+  "source": "src/evaluation/evaluate_v4.py",
+  "calibrated_at": "2026-10-02T21:42:47+00:00"
+}

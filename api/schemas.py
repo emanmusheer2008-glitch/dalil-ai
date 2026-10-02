@@ -16,6 +16,11 @@ ResponseType = Literal["answer", "possible_match", "related_services", "unsuppor
 
 
 # ------------------------------------------------------------------ /ask --
+class ConversationTurn(BaseModel):
+    role: Literal["user", "assistant"]
+    text: str = Field(..., min_length=1, max_length=1200)
+
+
 class AskRequest(BaseModel):
     model_config = ConfigDict(json_schema_extra={"examples": [
         {"question": "How can I renew a commercial registration?", "language": "auto"},
@@ -33,7 +38,13 @@ class AskRequest(BaseModel):
         description="Optional, for follow-up questions: the service_id of the previous answer (e.g. the first "
                     "entry of `sources`). If the new question is a short follow-up (\"what documents do I need?\", "
                     "«كم الرسوم؟») retrieval stays on that service. Stateless: nothing is stored on the server. "
-                    "Used by the lite runtime only.")
+                    "Used by the lite and v4 runtimes.")
+    conversation_context: list[ConversationTurn] | None = Field(
+        None, max_length=8, description="Optional, v4 only: the last few turns (oldest first) so the AI layer can "
+                                        "resolve follow-ups. Stateless; never stored.")
+    use_ai: bool | None = Field(
+        None, description="v4 only: false forces the deterministic (V3-style, verbatim) answer. Default: use the "
+                          "grounded AI layer when the server has it configured.")
 
     @field_validator("question")
     @classmethod
@@ -106,7 +117,23 @@ class AskResponse(BaseModel):
     latency_ms: float
     context_service_id: str | None = Field(
         None, description="The follow-up context actually applied (null if the question was treated as new).")
-    runtime: str = Field(..., description="Engine runtime that produced the answer: 'lite' (V3) or 'full' (V2).")
+    runtime: str = Field(..., description="Engine runtime: 'v4' (V3 + grounded AI layer), 'lite' (V3) or 'full' (V2).")
+    response_mode: str | None = Field(
+        None, description="v4: grounded_answer | partial_answer | possible_match | related_services | "
+                          "insufficient_evidence.")
+    answer: str | None = Field(None, description="v4 AI: short direct answer, written only from cited evidence.")
+    text_origin: str = Field("official_verbatim", description="official_verbatim (V3 text) or "
+                                                                "ai_generated_from_cited_evidence (v4 AI).")
+    ai_enabled: bool = False
+    ai_used: bool = False
+    ai_model: str | None = None
+    ai_fallback_reason: str | None = Field(None, description="Why the AI answer was not used (e.g. timeout).")
+    verified_fields: list[str] = Field(default_factory=list, description="Evidence fields the answer cites.")
+    unverified_information: list[str] = Field(default_factory=list,
+                                              description="What Dalil could NOT verify from official evidence.")
+    follow_up_suggestions: list[str] = Field(default_factory=list)
+    search_queries: list[str] = Field(default_factory=list, description="v4: queries used for retrieval.")
+    redactions_applied: int = Field(0, description="Personal identifiers removed before AI processing.")
     disclaimer: str
 
 

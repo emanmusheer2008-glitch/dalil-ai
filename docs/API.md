@@ -134,3 +134,9 @@ curl -s http://127.0.0.1:8000/services/mc-1
   was treated as new) and `runtime` (`lite` | `full`).
 - `/`, `/health`, `/info` and `/stats` report `runtime`; in lite mode `/stats.evaluation` comes from
   `results_v3.json` and includes the V2 reference numbers. All other fields are unchanged.
+
+## V4 additions (API 4.0.0)
+See `docs/V4.md`. `POST /ask` also accepts `conversation_context` and `use_ai`, and returns `response_mode`,
+`answer`, `text_origin`, `ai_*`, `verified_fields`, `unverified_information`, `follow_up_suggestions`,
+`search_queries` and `redactions_applied`. Existing fields are unchanged. `DALIL_RUNTIME` defaults to `v4`;
+`GEMINI_API_KEY` / `GEMINI_MODEL` are server-side environment variables.

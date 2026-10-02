@@ -1,0 +1,167 @@
+{
+  "generated_at": "2026-10-02T21:42:47+00:00",
+  "protocol": "V3 top-10 candidates + action rerank; weights by pooled dev+val MRR; thresholds = V3",
+  "selected": {
+    "bonus": 0.02,
+    "penalty": 0.03,
+    "dev_val_pooled_mrr": 0.8389
+  },
+  "v3": {
+    "dev_val": {
+      "n": 87,
+      "top1": 0.7701149425287356,
+      "top3": 0.8735632183908046,
+      "top5": 0.896551724137931,
+      "mrr": 0.8271209633278598
+    },
+    "test": {
+      "n": 120,
+      "top1": 0.775,
+      "top3": 0.8916666666666667,
+      "top5": 0.9333333333333333,
+      "mrr": 0.8393253968253968
+    },
+    "test_by_language": {
+      "ar": {
+        "n": 53,
+        "top1": 0.8301886792452831,
+        "top3": 0.9245283018867925,
+        "top5": 0.9433962264150944,
+        "mrr": 0.8852201257861636
+      },
+      "en": {
+        "n": 63,
+        "top1": 0.746031746031746,
+        "top3": 0.873015873015873,
+        "top5": 0.9206349206349206,
+        "mrr": 0.8111489040060469
+      },
+      "mixed": {
+        "n": 4,
+        "top1": 0.5,
+        "top3": 0.75,
+        "top5": 1.0,
+        "mrr": 0.675
+      }
+    },
+    "test_action_questions": {
+      "n": 63,
+      "top1": 0.873015873015873,
+      "top3": 0.9365079365079365,
+      "top5": 0.9682539682539683,
+      "mrr": 0.9066137566137565
+    },
+    "test_decision": {
+      "t_answer": 0.4388,
+      "t_tentative": 0.3091,
+      "n_answerable": 120,
+      "n_unanswerable": 21,
+      "answerable_success_top1": 0.6666666666666666,
+      "answerable_success_top3": 0.725,
+      "false_refusal_rate": 0.24166666666666667,
+      "confident_answer_rate": 0.36666666666666664,
+      "confident_answer_precision": 0.9772727272727273,
+      "unsupported_refusal_rate": 0.8095238095238095,
+      "unsupported_confident_answer_rate": 0.047619047619047616,
+      "refusal_precision": 0.3695652173913043,
+      "refusal_recall": 0.8095238095238095,
+      "refusal_f1": 0.5074626865671641
+    }
+  },
+  "v4": {
+    "dev_val": {
+      "n": 87,
+      "top1": 0.7931034482758621,
+      "top3": 0.8735632183908046,
+      "top5": 0.896551724137931,
+      "mrr": 0.8388888888888889
+    },
+    "test": {
+      "n": 120,
+      "top1": 0.775,
+      "top3": 0.8916666666666667,
+      "top5": 0.9333333333333333,
+      "mrr": 0.8389087301587301
+    },
+    "test_by_language": {
+      "ar": {
+        "n": 53,
+        "top1": 0.8113207547169812,
+        "top3": 0.9433962264150944,
+        "top5": 0.9433962264150944,
+        "mrr": 0.8773584905660378
+      },
+      "en": {
+        "n": 63,
+        "top1": 0.7619047619047619,
+        "top3": 0.8571428571428571,
+        "top5": 0.9206349206349206,
+        "mrr": 0.8169690098261527
+      },
+      "mixed": {
+        "n": 4,
+        "top1": 0.5,
+        "top3": 0.75,
+        "top5": 1.0,
+        "mrr": 0.675
+      }
+    },
+    "test_action_questions": {
+      "n": 63,
+      "top1": 0.873015873015873,
+      "top3": 0.9365079365079365,
+      "top5": 0.9682539682539683,
+      "mrr": 0.9058201058201057
+    },
+    "test_decision": {
+      "t_answer": 0.4388,
+      "t_tentative": 0.3091,
+      "n_answerable": 120,
+      "n_unanswerable": 21,
+      "answerable_success_top1": 0.6583333333333333,
+      "answerable_success_top3": 0.725,
+      "false_refusal_rate": 0.25,
+      "confident_answer_rate": 0.36666666666666664,
+      "confident_answer_precision": 0.9545454545454546,
+      "unsupported_refusal_rate": 0.8095238095238095,
+      "unsupported_confident_answer_rate": 0.047619047619047616,
+      "refusal_precision": 0.3617021276595745,
+      "refusal_recall": 0.8095238095238095,
+      "refusal_f1": 0.5
+    }
+  },
+  "test_changed_top1": [
+    {
+      "query": "حالة حجز تصريح الحج",
+      "v3_top1": "haj-9e614d501e",
+      "v4_top1": "haj-bf09d261e1",
+      "expected": "haj-9e614d501e",
+      "v3_correct": true,
+      "v4_correct": false
+    },
+    {
+      "query": "The hospital refused to accept my health insurance, where can I complain?",
+      "v3_top1": "chi-b7c6cdaad6",
+      "v4_top1": "chi-2b175a3ac3",
+      "expected": "chi-3926141375",
+      "v3_correct": false,
+      "v4_correct": true
+    },
+    {
+      "query": "I want to start a food truck, what license do I need?",
+      "v3_top1": "sfda-43ed22497c",
+      "v4_top1": "momah-9f4ae2e307",
+      "expected": "momah-2717fde38e",
+      "v3_correct": false,
+      "v4_correct": false
+    },
+    {
+      "query": "how do I officially register my will?",
+      "v3_top1": "mc-66",
+      "v4_top1": "haj-a28df4bb59",
+      "expected": "moj-4da171979f",
+      "v3_correct": false,
+      "v4_correct": false
+    }
+  ]
+}
