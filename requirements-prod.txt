@@ -1,0 +1,13 @@
+# Production (public API) dependencies for the V3 LITE runtime -- DALIL_RUNTIME=lite (default).
+# NO PyTorch, NO sentence-transformers, NO transformers: the query encoder is a static
+# word-vector table distilled offline (src/lite/build_static.py) and loaded with numpy.
+# Peak RSS measured ~0.3 GB (see docs/V3_LITE.md). Fits free 512 MB hosting tiers.
+#
+# The V2 research environment (full transformer runtime, Streamlit app, evaluation,
+# rebuilding the static table) still uses requirements.txt / requirements-dev.txt.
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+numpy>=1.24
+pandas>=2.0
+scikit-learn>=1.3
+beautifulsoup4>=4.12

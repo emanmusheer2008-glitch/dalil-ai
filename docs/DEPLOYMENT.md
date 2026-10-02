@@ -7,7 +7,18 @@
 | **HTTP API** for the future React frontend | `api.main:app` (FastAPI) | **Railway** (`railway.json`) |
 | Streamlit app | `app.py` | Streamlit Community Cloud |
 
-## Railway (HTTP API)
+## Render Free (HTTP API, V3 lite) — current public deployment
+
+`render.yaml` (Blueprint): free web service, `pip install -r requirements-prod.txt` (no PyTorch),
+`python -m uvicorn api.main:app --host 0.0.0.0 --port $PORT`, health check `/health`,
+`DALIL_RUNTIME=lite`. Peak RSS measured ~315 MB (free limit 512 MB). Free instances sleep after
+15 min idle; the first request after that takes ~30–60 s (cold start + ~3 s index load).
+
+Steps: Render → *New → Blueprint* (or *Web Service*) → connect the GitHub repo → Instance type **Free**
+→ deploy → open `https://<service>.onrender.com/docs`.
+
+## Railway (V2 full runtime — not used; needs >1 GB RAM)
+
 
 `railway.json` (repo root):
 

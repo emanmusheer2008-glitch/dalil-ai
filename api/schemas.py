@@ -20,6 +20,7 @@ class AskRequest(BaseModel):
     model_config = ConfigDict(json_schema_extra={"examples": [
         {"question": "How can I renew a commercial registration?", "language": "auto"},
         {"question": "كيف يمكنني تجديد السجل التجاري؟", "language": "ar"},
+        {"question": "كم الرسوم؟", "language": "auto", "context_service_id": "mc-1"},
     ]})
 
     question: str = Field(..., min_length=1, max_length=MAX_QUESTION_CHARS,
@@ -27,6 +28,12 @@ class AskRequest(BaseModel):
     language: Literal["auto", "en", "ar"] = Field(
         "auto", description="Language of the answer text and labels. 'auto' (default) detects it from the "
                             "question, exactly like the app.")
+    context_service_id: str | None = Field(
+        None, max_length=32, pattern=r"^[a-z]{2,6}-[0-9a-z]{1,16}$",
+        description="Optional, for follow-up questions: the service_id of the previous answer (e.g. the first "
+                    "entry of `sources`). If the new question is a short follow-up (\"what documents do I need?\", "
+                    "«كم الرسوم؟») retrieval stays on that service. Stateless: nothing is stored on the server. "
+                    "Used by the lite runtime only.")
 
     @field_validator("question")
     @classmethod
@@ -97,6 +104,9 @@ class AskResponse(BaseModel):
     top_score: float | None
     thresholds: Thresholds
     latency_ms: float
+    context_service_id: str | None = Field(
+        None, description="The follow-up context actually applied (null if the question was treated as new).")
+    runtime: str = Field(..., description="Engine runtime that produced the answer: 'lite' (V3) or 'full' (V2).")
     disclaimer: str
 
 

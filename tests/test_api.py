@@ -1,4 +1,6 @@
-"""API tests against the REAL Dalil V2 engine (no mocking of retrieval or answering).
+"""API tests against the REAL Dalil V2 engine (DALIL_RUNTIME=full; no mocking of retrieval or answering).
+
+The lite (V3) runtime has its own tests in tests/test_api_lite.py.
 
 The client is created once per module; the FastAPI lifespan loads the knowledge base and
 starts the background engine load, exactly as in production. Tests that need the engine
@@ -17,7 +19,11 @@ pytestmark = pytest.mark.integration
 def client():
     if not config.EMBEDDINGS_NPY.exists():
         pytest.skip("index not built")
+    pytest.importorskip("sentence_transformers")
     from fastapi.testclient import TestClient
+
+    mp = pytest.MonkeyPatch()
+    mp.setenv("DALIL_RUNTIME", "full")
 
     from api.main import STATE, app
 
@@ -30,6 +36,7 @@ def client():
         if STATE.status != "ready":
             pytest.skip("engine did not load in time")
         yield c
+    mp.undo()
 
 
 def _ask(client, q, language="auto"):

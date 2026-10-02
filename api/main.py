@@ -1,20 +1,30 @@
-"""Dalil AI — production HTTP API (FastAPI) around the verified V2 engine.
+"""Dalil AI — production HTTP API (FastAPI).
 
     python -m uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8000}
 
+Runtimes (``DALIL_RUNTIME``)
+---------------------------
+* ``lite`` (default, V3): ``src.lite.engine.DalilLite`` -- numpy/scikit-learn only, no PyTorch, no
+  sentence-transformers, no model download. Peak memory ~0.3 GB, fits free hosting tiers.
+* ``full`` (V2 research baseline): ``src.engine.Dalil`` with the multilingual transformer
+  (needs ``requirements.txt``; ~1.5 GB peak).
+
+Both use the same corpus, the same scoring code and the same answer synthesizer; each has its own
+thresholds calibrated on the same benchmark (see docs/V3_LITE.md).
+
 Architecture
 ------------
-    client (React / curl)  ->  this API  ->  src.engine.Dalil  (same object the Streamlit app uses)
-                                              -> Retriever (embeddings + char n-grams + title coverage)
+    client (React / curl)  ->  this API  ->  DalilLite | Dalil
+                                              -> Retriever (dense signal + char n-grams + BM25 + title coverage)
                                               -> synthesize (answer / possible match / related / decline)
 
 Loading
 -------
 * The knowledge base (``data/processed/services.jsonl``, ~0.1 s) is loaded at startup, so the
   browsing endpoints (/services, /agencies, /info, /stats) work immediately.
-* The expensive part -- embedding model, embeddings, lexical index -- is loaded ONCE per process in a
+* The expensive part -- embeddings / static vectors, lexical index (and the model in ``full``) -- is loaded ONCE per process in a
   background thread started at startup (set ``DALIL_EAGER_LOAD=0`` to load on the first /ask instead).
-  ``/health`` returns 503 ``"loading"`` until it is ready, so a platform health check (Railway) only
+  ``/health`` returns 503 ``"loading"`` until it is ready, so a platform health check only
   routes traffic once the engine can answer. Every /ask reuses the same engine object.
 * /ask calls are serialised with a lock: the engine keeps small in-process caches and the work is
   CPU-bound, so parallel calls would not be faster on a small instance.
@@ -49,7 +59,14 @@ from src.answering.synthesizer import query_language
 from src.ingestion.pipeline import load_services
 from src.ui import T as UI_TEXT
 
-API_VERSION = "2.0.0"
+API_VERSION = "3.0.0"
+RUNTIMES = ("lite", "full")
+
+
+def selected_runtime() -> str:
+    rt = os.environ.get("DALIL_RUNTIME", "lite").strip().lower() or "lite"
+    return rt if rt in RUNTIMES else "lite"
+
 
 
 class UTF8JSONResponse(JSONResponse):
@@ -67,6 +84,10 @@ class EngineState:
     """Holds the knowledge base and the (lazily/background-loaded) Dalil engine for this process."""
 
     def __init__(self) -> None:
+        self.reset()
+
+    def reset(self) -> None:
+        self.runtime = selected_runtime()
         self.records: dict = {}
         self.engine = None
         self.status = "not_loaded"          # not_loaded | loading | ready | error
@@ -90,15 +111,18 @@ class EngineState:
             self.status = "loading"
             t0 = time.perf_counter()
             try:
-                from src.engine import Dalil      # heavy imports (torch, sentence-transformers) happen here
-
-                d = Dalil(records=self.records or None)
-                d.warm_up()                       # loads the model once
+                if self.runtime == "full":
+                    from src.engine import Dalil  # heavy imports (torch, sentence-transformers) happen here
+                    d = Dalil(records=self.records or None)
+                else:
+                    from src.lite.engine import DalilLite      # numpy / scikit-learn only
+                    d = DalilLite(records=self.records or None)
+                d.warm_up()
                 self.engine = d
                 self.records = d.records
                 self.load_seconds = round(time.perf_counter() - t0, 2)
                 self.status = "ready"
-                log.info("Dalil engine ready in %.1f s", self.load_seconds)
+                log.info("Dalil engine (%s) ready in %.1f s", self.runtime, self.load_seconds)
             except Exception as e:  # keep the API up; /health reports the failure
                 self.status = "error"
                 self.error = type(e).__name__
@@ -116,10 +140,12 @@ class EngineState:
         self._ready.wait(timeout)
         return self.status == "ready"
 
-    def ask(self, question: str, ui_lang: str | None):
+    def ask(self, question: str, ui_lang: str | None, context_service_id: str | None = None):
         with self._ask_lock:
             self.asks += 1
-            return self.engine.ask(question, ui_lang=ui_lang)
+            if self.runtime == "full":    # V2 engine is single-turn; context is ignored
+                return self.engine.ask(question, ui_lang=ui_lang)
+            return self.engine.ask(question, ui_lang=ui_lang, context_service_id=context_service_id)
 
 
 STATE = EngineState()
@@ -134,6 +160,7 @@ def _cors_origins() -> list[str]:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    STATE.reset()                         # picks up DALIL_RUNTIME; fresh state per app start
     STATE.load_records()
     if os.environ.get("DALIL_EAGER_LOAD", "1").strip().lower() not in ("0", "false", "no"):
         STATE.start_background_load()
@@ -219,7 +246,8 @@ def _norm(s: str | None) -> str:
 # ============================================================== endpoints ==
 @app.get("/", tags=["meta"])
 def root() -> dict[str, Any]:
-    return {"name": "Dalil AI API", "version": API_VERSION, "status": "ok", "docs": "/docs", "health": "/health"}
+    return {"name": "Dalil AI API", "version": API_VERSION, "runtime": STATE.runtime, "status": "ok",
+            "docs": "/docs", "health": "/health"}
 
 
 @app.get("/health", tags=["meta"], responses={503: {"description": "Engine loading or failed"}})
@@ -231,6 +259,7 @@ def health():
         "knowledge_base_loaded": bool(STATE.records),
         "services": len(STATE.records),
         "version": API_VERSION,
+        "runtime": STATE.runtime,
         "engine_load_seconds": STATE.load_seconds,
         "uptime_seconds": round(time.time() - STATE.started_at, 1),
     }
@@ -246,11 +275,41 @@ def info() -> dict[str, Any]:
     recs = STATE.records
     meta = _read_json(config.INDEX_META_JSON) or {}
     rep = _read_json(config.BUILD_REPORT_JSON) or {}
-    cfg = _read_json(config.RETRIEVAL_CONFIG_V2_JSON) or {}
+    lite = STATE.runtime == "lite"
+    cfg = _read_json(config.PROCESSED_DIR / "retrieval_config_v3.json" if lite else config.RETRIEVAL_CONFIG_V2_JSON) or {}
+    static = (_read_json(config.PROCESSED_DIR / "static_vocab.json") or {}) if lite else {}
     rng = rep.get("date_collected_range") or [None, None]
+    if lite:
+        retrieval = {
+            "runtime": "lite (V3)",
+            "transformer_loaded_at_runtime": False,
+            "method": "hybrid: static word embeddings for the query (distilled offline from the multilingual "
+                      "model) against the precomputed document embeddings, + character n-gram TF-IDF + BM25 + "
+                      "title coverage, with bilingual query expansion (lexical signals)",
+            "distilled_from": meta.get("model_name"),
+            "static_vocabulary_words": len(static.get("words") or []) or None,
+            "embedding_dim": meta.get("dim"),
+            "weights": cfg.get("params"),
+            "thresholds": {"answer": cfg.get("t_answer"), "possible_match": cfg.get("t_tentative"),
+                           "related": cfg.get("t_related")},
+            "follow_up_context": "stateless: send context_service_id with /ask",
+        }
+    else:
+        retrieval = {
+            "runtime": "full (V2)",
+            "transformer_loaded_at_runtime": True,
+            "embedding_model": meta.get("model_name"),
+            "embedding_dim": meta.get("dim"),
+            "method": "hybrid: multilingual embeddings + character n-gram TF-IDF + title coverage, "
+                      "with bilingual query expansion (lexical signals)",
+            "weights": cfg.get("params"),
+            "thresholds": {"answer": cfg.get("t_answer"), "possible_match": cfg.get("t_tentative"),
+                           "related": cfg.get("t_related")},
+        }
     return {
         "name": "Dalil AI",
         "version": API_VERSION,
+        "runtime": STATE.runtime,
         "description": "Bilingual retrieval-grounded assistant for official Saudi public-service information.",
         "supported_languages": ["ar", "en"],
         "question_max_chars": MAX_QUESTION_CHARS,
@@ -264,15 +323,7 @@ def info() -> dict[str, Any]:
             "captured_to": (rng[1] or "")[:10] or None,
             "source_domains": rep.get("source_domains"),
         },
-        "retrieval": {
-            "embedding_model": meta.get("model_name"),
-            "embedding_dim": meta.get("dim"),
-            "method": "hybrid: multilingual embeddings + character n-gram TF-IDF + title coverage, "
-                      "with bilingual query expansion (lexical signals)",
-            "weights": cfg.get("params"),
-            "thresholds": {"answer": cfg.get("t_answer"), "possible_match": cfg.get("t_tentative"),
-                           "related": cfg.get("t_related")},
-        },
+        "retrieval": retrieval,
         "response_types": {
             "answer": "confident match; sections of verbatim official text with citations",
             "possible_match": "best match shown with a warning that it may not be exact",
@@ -292,7 +343,7 @@ def ask(req: AskRequest) -> AskResponse:
         raise HTTPException(status_code=503, detail="Dalil engine is not ready yet. Please retry shortly.")
     t0 = time.perf_counter()
     ui_lang = None if req.language == "auto" else req.language
-    ans = STATE.ask(req.question, ui_lang)
+    ans = STATE.ask(req.question, ui_lang, req.context_service_id)
     ms = (time.perf_counter() - t0) * 1000
     th = ans.thresholds or {}
     return AskResponse(
@@ -315,6 +366,8 @@ def ask(req: AskRequest) -> AskResponse:
         top_score=None if ans.top_score is None else round(float(ans.top_score), 4),
         thresholds=Thresholds(answer=th.get("answer"), possible_match=th.get("tentative"), related=th.get("related")),
         latency_ms=round(ms, 1),
+        context_service_id=getattr(ans, "context_service_id", None),
+        runtime=STATE.runtime,
         disclaimer=UI_TEXT[ans.ui_lang]["disclaimer"],
     )
 
@@ -401,8 +454,26 @@ def stats() -> dict[str, Any]:
             "with_english": rep.get("with_english"),
             "knowledge_base_built_at": rep.get("built_at"),
         },
-        "api": {"questions_answered_since_start": STATE.asks, "engine_status": STATE.status},
+        "api": {"questions_answered_since_start": STATE.asks, "engine_status": STATE.status,
+                "runtime": STATE.runtime},
     }
+    r3 = _read_json(config.EVAL_DIR / "results_v3.json") or {}
+    if STATE.runtime == "lite" and r3:
+        v3 = r3.get("v3_test") or {}
+        out["evaluation"] = {
+            "runtime_evaluated": "lite (V3) -- the runtime serving this API",
+            "source": "data/evaluation/results_v3.json (same benchmark and held-out test split as V2)",
+            "generated_at": r3.get("generated_at"),
+            "protocol": r3.get("protocol"),
+            "selected_configuration": (r3.get("selected") or {}).get("name"),
+            "test_retrieval": v3.get("retrieval"),
+            "test_retrieval_by_language": v3.get("retrieval_by_language"),
+            "test_decision": v3.get("decision"),
+            "test_retrieval_fresh_families": v3.get("retrieval_fresh_families"),
+            "related_links_test": v3.get("related_links"),
+            "v2_full_runtime_reference_test": r3.get("v2_reference_test"),
+        }
+        return out
     if res:
         out["evaluation"] = {
             "source": "data/evaluation/results_v2.json (held-out test split)",

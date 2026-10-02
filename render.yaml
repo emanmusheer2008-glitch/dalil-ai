@@ -1,0 +1,17 @@
+# Render Blueprint -- Dalil AI public API, V3 lite runtime, FREE instance (no card needed).
+# Installs requirements-prod.txt only: no PyTorch / sentence-transformers / transformers.
+services:
+  - type: web
+    name: dalil-ai-api
+    runtime: python
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements-prod.txt
+    startCommand: python -m uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DALIL_RUNTIME
+        value: lite
+      - key: PYTHON_VERSION
+        value: 3.11.11

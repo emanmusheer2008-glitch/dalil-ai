@@ -24,7 +24,8 @@ Startup: the knowledge base (799 services) loads instantly. The model and index 
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `PORT` | 8000 (via the start command) | Port to listen on. Railway sets it. |
+| `PORT` | 8000 (via the start command) | Port to listen on. The host (Render) sets it. |
+| `DALIL_RUNTIME` | `lite` | `lite` = V3 runtime (no PyTorch, ~0.3 GB); `full` = V2 transformer engine (needs `requirements.txt`, ~1.5 GB). |
 | `DALIL_CORS_ORIGINS` | *(unset)* → `*` | Comma-separated list of allowed browser origins, e.g. `https://dalil.vercel.app,https://www.dalil.app`. Unset or `*` allows any origin (no cookies/credentials are used, so this is safe for a public read-only API). |
 | `DALIL_EAGER_LOAD` | `1` | `1`: load the engine in the background at startup. `0`: load on the first `/ask` (faster boot, slow first question). |
 | `DALIL_ASK_WAIT_SECONDS` | `120` | How long `/ask` waits for the engine to finish loading before returning 503. |
@@ -124,3 +125,12 @@ curl -s http://127.0.0.1:8000/services/mc-1
 - Memory is about **1.3 GB RSS** per process (PyTorch + model + index). Use an instance with ≥ 2 GB.
 - Answers inherit the V2 engine's known limitations (README → *Limitations*): Interior/Absher topics (iqama, traffic fines, in-Kingdom passports) are not in the corpus, sibling services are the main error (e.g. "renew a commercial registration" → "renewal of Commercial **Agency**", while the corpus has the "annual confirmation of commercial registry data" services instead), and the corpus is a snapshot from 30 Sep – 1 Oct 2026.
 - No authentication or rate limiting yet. Add rate limiting at the edge (or a small middleware) before heavy public use.
+
+
+## V3 additions (API 3.0.0)
+- `POST /ask` accepts optional `context_service_id` (the previous answer's `sources[0].service_id`) for
+  follow-up questions such as "What documents do I need?" / «كم الرسوم؟». Stateless; validated against
+  `^[a-z]{2,6}-[0-9a-z]{1,16}$`. The response echoes the context actually applied (`null` if the question
+  was treated as new) and `runtime` (`lite` | `full`).
+- `/`, `/health`, `/info` and `/stats` report `runtime`; in lite mode `/stats.evaluation` comes from
+  `results_v3.json` and includes the V2 reference numbers. All other fields are unchanged.
