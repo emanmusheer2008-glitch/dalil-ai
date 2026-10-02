@@ -56,14 +56,16 @@ class Dalil:
         return self.retriever.search(query, method=c["method"], alpha=c.get("alpha", 0.0),
                                      params=c.get("params"), top_k=top_k)
 
-    def ask(self, query: str, rank_sentences: bool = True) -> SynthAnswer:
+    def ask(self, query: str, rank_sentences: bool = True, ui_lang: str | None = None) -> SynthAnswer:
+        """``ui_lang`` (``"en"``/``"ar"``) only chooses the language of the answer text and labels;
+        ``None`` keeps the default behaviour: detected from the question (``query_language``)."""
         result = self.search(query)
         kwargs = {}
         if rank_sentences and query.strip():
             kwargs = {"encode": lambda sents: embedder.encode(sents, self.retriever.model_path),
                       "query_vec": self.retriever._encode(query)}
         return synthesize(result, self.records, self.t_answer, self.t_tentative, t_related=self.t_related,
-                          ui_lang=query_language(query), **kwargs)
+                          ui_lang=ui_lang or query_language(query), **kwargs)
 
 
 def _print_answer(ans: SynthAnswer, ms: float) -> None:

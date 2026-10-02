@@ -1,8 +1,41 @@
 # Deployment
 
-**Status:** not deployed (by design; localhost until the owner approves). Everything below has been prepared, and nothing requires a paid service.
+**Status:** not deployed (by design; localhost until the owner approves). Two deployable surfaces share the same engine:
 
-## Recommended host: Streamlit Community Cloud (free)
+| Surface | Entry point | Host |
+|---|---|---|
+| **HTTP API** for the future React frontend | `api.main:app` (FastAPI) | **Railway** (`railway.json`) |
+| Streamlit app | `app.py` | Streamlit Community Cloud |
+
+## Railway (HTTP API)
+
+`railway.json` (repo root):
+
+```json
+{
+  "deploy": {
+    "startCommand": "python -m uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8000}",
+    "healthcheckPath": "/health",
+    "healthcheckTimeout": 300,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 5
+  }
+}
+```
+
+- **Build:** Railway's default Python builder installs `requirements.txt` (CPU-only PyTorch via `--extra-index-url`, sentence-transformers, FastAPI, uvicorn, …). `.python-version` pins Python **3.11**, the version the tests and the API were verified on.
+- **Start:** POSIX command, binds `0.0.0.0` on Railway's `$PORT`. No Windows paths anywhere: every file path resolves from the repository root (`src/config.py`).
+- **Health check:** `/health` returns 503 while the model loads and 200 once `/ask` can answer, so traffic is only routed to a ready instance. The 300 s timeout covers the first start, which also downloads the ~470 MB model.
+- **Data at runtime:** `data/processed/` and `data/evaluation/` from the repo only. Raw captures are not needed. `lexical_index.pkl` is rebuilt on first start (~3 s) and written next to the data.
+- **Variables to set in Railway:** usually none. Optionally `DALIL_CORS_ORIGINS=https://<your-frontend-domain>` once the frontend URL is known (default allows any origin), and `HF_HOME=/data/hf` with a Railway volume mounted at `/data` to keep the model between deploys.
+- **Resources:** about 1.3 GB RAM per process (measured). Choose a plan or instance with ≥ 2 GB. Expect a 5–15 s engine load after each deploy or restart (longer on the very first start because of the model download).
+- **Steps when approved:** push to GitHub → Railway *New project → Deploy from GitHub repo* → select the repo (it picks up `railway.json`) → wait for the health check → *Settings → Networking → Generate domain* → open `https://<domain>/docs`. About 15 minutes.
+
+See `docs/API.md` for endpoints and response formats.
+
+---
+
+## Streamlit Community Cloud (Streamlit app)
 
 Why: the app is a Streamlit app, the host is free, it builds directly from a GitHub repository, and it gives an HTTPS URL. Alternatives (Hugging Face Spaces with the Streamlit SDK, Render's free tier) would also work. They offer no advantage here, and Render's free instances sleep and have less memory.
 

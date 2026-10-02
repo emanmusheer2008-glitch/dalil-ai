@@ -188,6 +188,10 @@ docs/                      development log, methodology, architecture, provenanc
 - Official pages change; answers show their capture date and the data must be re-captured periodically.
 - CHI services are English-only in this version.
 
+## HTTP API (for a web/mobile frontend)
+
+`python -m uvicorn api.main:app --port 8000`, then open `/docs`. `POST /ask` returns a structured, cited answer with `response_type` = `answer` | `possible_match` | `related_services` | `unsupported`. `GET /services`, `/services/{id}`, `/agencies`, `/info`, `/stats` and `/health` are also available. It uses the same engine as the app. See `docs/API.md`. Railway config: `railway.json`.
+
 ## Deployment
 
 Localhost now. Deployment-ready for **Streamlit Community Cloud** (free): no secrets, relative paths only, CPU-only PyTorch, prebuilt index committed. See `docs/DEPLOYMENT.md`.

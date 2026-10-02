@@ -1,5 +1,5 @@
 # Runtime dependencies (all free / open source). No paid APIs, no FAISS.
-# CPU-only PyTorch wheels keep the install small on Linux hosting (Streamlit Community Cloud).
+# CPU-only PyTorch wheels keep the install small on Linux hosting (Railway / Streamlit Community Cloud).
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch>=2.2
 sentence-transformers>=3.0
@@ -9,3 +9,6 @@ pandas>=2.0
 numpy>=1.24
 beautifulsoup4>=4.12
 altair>=5.0
+# HTTP API (api/main.py)
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
