@@ -1,7 +1,7 @@
 {
   "built_at": "2026-10-03T00:24:42+00:00",
   "sources": {
-    "mc_catalog:/home/claude/work/dalil/data/raw/official/mc/mc_services_capture.json": {
+    "mc_catalog:data/raw/official/mc/mc_services_capture.json": {
       "loaded": 75,
       "accepted": 73
     },
@@ -95,11 +95,11 @@
       "pages_error_or_empty": 0,
       "pages_wrong_language": 0
     },
-    "saved_pages:/home/claude/work/dalil/data/raw/manual": {
+    "saved_pages:data/raw/manual": {
       "loaded": 0,
       "accepted": 0
     },
-    "legacy_seed_csv:/home/claude/work/dalil/data/raw/seed/services_seed_v0.csv": {
+    "legacy_seed_csv:data/raw/seed/services_seed_v0.csv": {
       "loaded": 18,
       "accepted": 0
     },

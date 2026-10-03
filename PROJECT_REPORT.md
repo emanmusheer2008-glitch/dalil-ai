@@ -4,7 +4,7 @@
 **Almost finished.** The code, data pipeline, index, evaluation, tests, app and documentation are complete and verified. Two items remain open: the everyday Interior/Absher topics can't be captured legitimately from the available connection, and deployment needs the owner's approval plus a data-licence decision.
 
 ## B. Project location
-`C:\Users\shams\Desktop\dalil-ai` (git repository; V1 commit tagged `v1`, V2 committed on top). The `OneDrive\Desktop\dalil-ai` folder was empty and is not used.
+`<project folder>` (git repository; V1 commit tagged `v1`, V2 committed on top). The `OneDrive\Desktop\dalil-ai` folder was empty and is not used.
 
 ## C. Data
 | Agency | Raw pages | HTTP 200 | Services indexed | Arabic / English | Exclusions & failures |
