@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-10-01T09:30:45+00:00",
+  "built_at": "2026-10-03T00:24:42+00:00",
   "sources": {
     "mc_catalog:/home/claude/work/dalil/data/raw/official/mc/mc_services_capture.json": {
       "loaded": 75,
@@ -102,9 +102,13 @@
     "legacy_seed_csv:/home/claude/work/dalil/data/raw/seed/services_seed_v0.csv": {
       "loaded": 18,
       "accepted": 0
+    },
+    "absher_user_guide:data/raw/official/absher/absher_guide_capture.json": {
+      "loaded": 111,
+      "accepted": 111
     }
   },
-  "services_indexed": 799,
+  "services_indexed": 910,
   "services_quarantined": 33,
   "duplicates_removed": 5,
   "agencies": [
@@ -114,10 +118,15 @@
     "Ministry of Foreign Affairs",
     "Ministry of Hajj and Umrah",
     "Ministry of Human Resources and Social Development",
+    "Ministry of Interior – Absher (Passports)",
+    "Ministry of Interior – Absher (Traffic)",
+    "Ministry of Interior – Absher Business",
     "Ministry of Justice",
     "Ministry of Municipalities and Housing",
     "Saudi Food and Drug Authority",
-    "Zakat, Tax and Customs Authority"
+    "Zakat, Tax and Customs Authority",
+    "وزارة الداخلية – أبشر (الجوازات)",
+    "وزارة الداخلية – أبشر (المرور)"
   ],
   "page_labels_en": {
     "Merchant": 55,
@@ -145,6 +154,7 @@
     "Commercial Registration Data": 1
   },
   "source_domains": [
+    "absher.sa",
     "chi.gov.sa",
     "haj.gov.sa",
     "hrsd.gov.sa",
@@ -156,42 +166,43 @@
     "sfda.gov.sa",
     "zatca.gov.sa"
   ],
-  "with_arabic": 780,
-  "with_english": 799,
+  "with_arabic": 889,
+  "with_english": 888,
   "field_coverage": {
-    "title_en": 799,
-    "title_ar": 780,
-    "category_en": 73,
-    "category_ar": 73,
-    "description_en": 777,
-    "description_ar": 760,
-    "eligibility_en": 100,
-    "eligibility_ar": 0,
-    "requirements_en": 522,
-    "requirements_ar": 636,
+    "title_en": 888,
+    "title_ar": 889,
+    "category_en": 162,
+    "category_ar": 182,
+    "description_en": 866,
+    "description_ar": 869,
+    "eligibility_en": 188,
+    "eligibility_ar": 104,
+    "requirements_en": 585,
+    "requirements_ar": 719,
     "required_documents_en": 401,
     "required_documents_ar": 378,
-    "steps_en": 787,
-    "steps_ar": 775,
-    "fees_en": 452,
-    "fees_ar": 437,
-    "processing_time_en": 312,
-    "processing_time_ar": 464,
-    "target_audience_en": 723,
-    "target_audience_ar": 570,
-    "service_languages_en": 587,
-    "service_languages_ar": 381,
+    "steps_en": 858,
+    "steps_ar": 867,
+    "fees_en": 486,
+    "fees_ar": 475,
+    "processing_time_en": 378,
+    "processing_time_ar": 549,
+    "target_audience_en": 811,
+    "target_audience_ar": 679,
+    "service_languages_en": 658,
+    "service_languages_ar": 471,
     "notes_en": 0,
     "notes_ar": 0,
     "source_last_modified_en": 73,
     "source_last_modified_ar": 73
   },
   "warnings": {
-    "no official Arabic text": 19,
-    "no description (other official fields present)": 16
+    "no official Arabic text": 21,
+    "no description (other official fields present)": 16,
+    "no official English text": 22
   },
   "date_collected_range": [
     "2026-09-30T10:07:45.854Z",
-    "2026-10-01T06:22:34.029Z"
+    "2026-10-03T00:24:16+00:00"
   ]
 }

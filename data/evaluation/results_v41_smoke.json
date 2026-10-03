@@ -1,0 +1,182 @@
+{
+  "generated_at": "2026-10-03T01:08:09+00:00",
+  "model": "gemini-3.5-flash-lite",
+  "gemini_calls": 9,
+  "tokens": {
+    "prompt": 5993,
+    "output": 3043
+  },
+  "samples": [
+    {
+      "question": "How do I renew my iqama?",
+      "mode": "partial_answer",
+      "ai_used": true,
+      "ai_error": null,
+      "text_origin": "ai_generated_from_cited_evidence",
+      "calls": 2,
+      "points_rejected": 0,
+      "language_ok": true,
+      "urls_from_records": true,
+      "sources": [
+        "absher-d267dc14f3 | Renewal of resident identity (Iqama) | https://www.absher.sa/wps/portal/business/static/guide/!ut/p/z0/fYzBDoIwEER_pRfO22KCejSoGOMFExPYC6l1Q1abFmghfr69cPX2Zt5kAKEBdHrhXkf2TtuUWyw6pY67S17JW3U-lbK-l0pu6_2mehRwBfw_SA_8Hkc8ABrvIn0jNM85sKMQxOCnqG0mKdC0sKEg5kSin_lFqbVk4uQdG7H6TK7U5R05GD7Y_gDSxQYV/"
+      ],
+      "related": [],
+      "answer": "Establishment owners can renew the resident identity (iqama) for their workers online through the Absher platform by ensuring all eligibility requirements are met.",
+      "sections": {
+        "eligibility": [
+          "You must pay for the desired period for Iqama renewal and ensure the sponsoree's passport is valid.",
+          "The sponsoree must not have any unpaid traffic violations or be registered as absent.",
+          "The sponsoree and family members over 6 years old must have their fingerprints and photos registered in Absher.",
+          "Sponsorees and their family members must have medical insurance, and the worker must have a valid work permit.",
+          "The sponsoree must not have male family members aged 18 or older, and family members cannot be included in the sponsoree's passport."
+        ],
+        "processing": [
+          "The renewal is processed immediately through the Absher Business platform."
+        ],
+        "where_to_apply": [
+          "Applications are submitted online through Absher (Ministry of Interior e-services platform) by establishment owners."
+        ]
+      },
+      "unverified": [
+        "Detailed step-by-step instructions for the Absher portal",
+        "Specific fees for the iqama renewal"
+      ]
+    },
+    {
+      "question": "How can I check my traffic violations?",
+      "mode": "grounded_answer",
+      "ai_used": true,
+      "ai_error": null,
+      "text_origin": "ai_generated_from_cited_evidence",
+      "calls": 2,
+      "points_rejected": 0,
+      "language_ok": true,
+      "urls_from_records": true,
+      "sources": [
+        "absher-038955335f | Query Traffic Violations | https://www.absher.sa/wps/wcm/connect/individuals/contents/individuals/eservices+user+guide/eservices/traffic-services/traffic_service9",
+        "absher-2e1ac941a6 | Query Traffic Violations for Visitors | https://www.absher.sa/wps/wcm/connect/individuals/contents/individuals/eservices+user+guide/eservices/traffic-services/traffic_service14",
+        "absher-d0681184a4 | الاستعلام عن المخالفات قبل تسجيل الدخول | https://www.absher.sa/wps/wcm/connect/individuals/contents/individuals+ar/eservices+user+guide/eservices/traffic-services/traffic_service100"
+      ],
+      "related": [],
+      "answer": "You can check your traffic violations electronically through the Absher platform using various inquiry services available for citizens, residents, visitors, and even without logging in.",
+      "sections": {
+        "steps": [
+          "For citizens and residents with an Absher account, navigate through My Services, Services, Traffic, and Query Traffic Violations.",
+          "For visitors, log in to the Absher platform website, click Instant Absher Services, choose Visitors, select Query Traffic Violations for Visitors, enter the document number, and click View to display unpaid violations.",
+          "To check unpaid traffic violations without logging in, go to the Absher platform website, visit the service page, and select the inquiry option before logging in."
+        ],
+        "fees": [
+          "Checking traffic violations is a free inquiry service with no fees."
+        ]
+      },
+      "unverified": []
+    },
+    {
+      "question": "How do I renew my driving licence?",
+      "mode": "grounded_answer",
+      "ai_used": true,
+      "ai_error": null,
+      "text_origin": "ai_generated_from_cited_evidence",
+      "calls": 1,
+      "points_rejected": 0,
+      "language_ok": true,
+      "urls_from_records": true,
+      "sources": [
+        "absher-9af219f690 | Renew Driving License | https://www.absher.sa/wps/wcm/connect/individuals/contents/individuals/eservices+user+guide/eservices/traffic-services/traffic_service1"
+      ],
+      "related": [],
+      "answer": "You can renew your driving licence electronically through the Absher platform without visiting traffic offices.",
+      "sections": {
+        "eligibility": [
+          "The service applies to private driving and motorcycle driving licences only.",
+          "The remaining validity period of the driving licence must be less than 365 days.",
+          "Any traffic violations must be paid, and you must complete a medical examination through certified medical centres."
+        ],
+        "steps": [
+          "Log in to the Absher platform, go to \"My Services\", and choose \"Traffic\" from the services list.",
+          "Select \"Renew Driving License\", review the terms, and choose the renewal period (2, 5, or 10 years).",
+          "Fill in the National Address details for delivery, review the data, and pay the delivery fees."
+        ],
+        "fees": [
+          "The renewal fee is 40 SR per year for a private driving licence, and 200 SR for a motorcycle driving licence for 10 years."
+        ]
+      },
+      "unverified": []
+    },
+    {
+      "question": "I lost my passport. What should I do?",
+      "mode": "grounded_answer",
+      "ai_used": true,
+      "ai_error": null,
+      "text_origin": "ai_generated_from_cited_evidence",
+      "calls": 2,
+      "points_rejected": 0,
+      "language_ok": true,
+      "urls_from_records": true,
+      "sources": [
+        "absher-7d4fcc5243 | Report the loss of the Saudi passport | https://www.absher.sa/wps/wcm/connect/individuals/contents/individuals/eservices+user+guide/eservices/passport-services/passprts_service120",
+        "absher-0c28092a5d | Lost Passport Replacement Issuance | https://www.absher.sa/wps/wcm/connect/individuals/contents/individuals/eservices+user+guide/eservices/passport-services/passprts_service196"
+      ],
+      "related": [],
+      "answer": "If you lost your passport, you can report the loss electronically through the Absher platform and then request a replacement passport online.",
+      "sections": {
+        "overview": [
+          "You can report the loss of your Saudi passport online via the Absher platform without visiting passport offices.",
+          "Citizens can also request a replacement passport issuance electronically through Absher with delivery to a registered address."
+        ],
+        "eligibility": [
+          "You must have a Saudi passport for yourself, the passport must be valid, and you must not have any pending reports under process.",
+          "You must be present within the Kingdom of Saudi Arabia during the report submission.",
+          "To get a replacement, your citizen ID must be valid, your fingerprint and photograph must be in Ministry systems, and a report of the lost passport must be filed."
+        ],
+        "requirements": [
+          "An updated national address must be present on the Absher platform.",
+          "You must review and agree to the data or declaration, and pay applicable fines."
+        ],
+        "steps": [
+          "To report the loss, log in to Absher, select \"Passports\", then select \"Report Lost Saudi Passport\" and \"New Report\".",
+          "Select the beneficiary and type of report, fill in the details, answer required questions, and submit.",
+          "To request a replacement, log in to Absher, select My Services, choose Saudi Passport Services, and select New Application.",
+          "Choose Lost Passport Replacement Issuance, fill in delivery details, select the carrier, and review information to pay delivery fees."
+        ],
+        "fees": [
+          "Reporting the loss of the passport is free.",
+          "Replacement issuance requires the payment of applicable fines and delivery fees."
+        ],
+        "where_to_apply": [
+          "The services are available through the Absher platform of the Ministry of Interior."
+        ]
+      },
+      "unverified": []
+    },
+    {
+      "question": "كيف أجدد الإقامة؟",
+      "mode": "grounded_answer",
+      "ai_used": true,
+      "ai_error": null,
+      "text_origin": "ai_generated_from_cited_evidence",
+      "calls": 2,
+      "points_rejected": 0,
+      "language_ok": true,
+      "urls_from_records": true,
+      "sources": [
+        "absher-d267dc14f3 | تجديد الإقامة | https://www.absher.sa/wps/portal/business/static/guide/!ut/p/z0/fYw9D4IwFEX_ShfmVzBBHQ1qjXFBY8QupJYX8pS00A_iz7cLq9u599xckNCANGqmXgWyRg0pP2XZ5vl-cyoEv4jjoeL1tcr5ut6uxL2Em3JwBvl_lF7oPU1yB1JbE_AboHlFTwa9Z6N1QQ0ZR49uJo2exUSsj9RhagfUwVlDmi0-4wu1RYsGxo94_ADGdOjP/"
+      ],
+      "related": [],
+      "answer": "يمكن تجديد هوية مقيم (إقامة) للعامل إلكترونياً من خلال منصة أبشر أعمال المقدمة من وزارة الداخلية لصاحب المنشأة.",
+      "sections": {
+        "eligibility": [
+          "يشترط تواجد العامل داخل أراضي المملكة العربية السعودية وسريان جواز سفره عند استخدام الخدمة.",
+          "يجب سداد رسوم إصدار الإقامة وغرامة التأخير والمخالفات المرورية المسجلة على العامل إن وجدت.",
+          "يجب تسجيل بصمة وصورة للعامل وتابعيه، وتوافر تأمين طبي للعامل وأفراد أسرته في حالة وجودهم معه.",
+          "يجب تسجيل واجتياز الفحص الطبي للعامل في المراكز الطبية المعتمدة، وألا يكون العامل مسجلاً بالنظام متغيب عن العمل.",
+          "يجب أن يكون العامل الحاصل على رخصة عمل لبعض الوظائف المطلوبة."
+        ],
+        "processing": [
+          "تتم عملية تجديد الإقامة بشكل فوري من خلال منصة أبشر أعمال."
+        ]
+      },
+      "unverified": []
+    }
+  ]
+}

@@ -19,6 +19,7 @@ models/
 # Re-create with scripts/browser_capture_*.js (see docs/data_provenance.md).
 data/raw/official/v2/*.json
 data/raw/official/mc/*.json
+data/raw/official/absher/*.json
 
 # Rebuildable caches
 data/processed/lexical_index.pkl

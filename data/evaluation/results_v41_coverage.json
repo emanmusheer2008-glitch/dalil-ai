@@ -1,0 +1,752 @@
+{
+ "protocol": "17 targeted questions (task list); deterministic V4 retrieval (no AI); expected = official Absher service(s) named per question; None = no official service captured (coverage gap)",
+ "expected": {
+  "How do I renew my iqama?": [
+   "Renewal of resident identity (Iqama)",
+   "Resident ID Renewal"
+  ],
+  "I lost my iqama. What should I do?": null,
+  "How can I check my traffic violations?": [
+   "Query Traffic Violations",
+   "Query Traffic Violations for Visitors"
+  ],
+  "Can I object to a traffic violation?": [
+   "Dispute Traffic Violations"
+  ],
+  "How do I renew my driving licence?": [
+   "Renew Driving License"
+  ],
+  "I lost my driving licence.": null,
+  "How do I renew my Saudi passport?": [
+   "Renewing the Saudi passport",
+   "Minor Passport Renewal"
+  ],
+  "I lost my passport.": [
+   "Lost Passport Replacement Issuance",
+   "Report the loss of the Saudi passport",
+   "Report the loss of the Saudi passport "
+  ],
+  "How can I check my exit re-entry visa?": [
+   "Exit/Re-Entry Visa Status"
+  ],
+  "كيف أجدد الإقامة؟": [
+   "Renewal of resident identity (Iqama)",
+   "Resident ID Renewal"
+  ],
+  "فقدت الإقامة وش أسوي؟": null,
+  "كيف أستعلم عن المخالفات المرورية؟": [
+   "Query Traffic Violations",
+   "Query Traffic Violations for Visitors",
+   "الاستعلام عن المخالفات قبل تسجيل الدخول"
+  ],
+  "كيف أعترض على مخالفة مرورية؟": [
+   "Dispute Traffic Violations"
+  ],
+  "كيف أجدد رخصة القيادة؟": [
+   "Renew Driving License"
+  ],
+  "فقدت رخصة القيادة": null,
+  "كيف أجدد جواز السفر؟": [
+   "Renewing the Saudi passport",
+   "تجديد جواز السفر السعودي لأفراد الأسرة",
+   "Minor Passport Renewal"
+  ],
+  "فقدت جواز السفر وش أسوي؟": [
+   "Lost Passport Replacement Issuance",
+   "Report the loss of the Saudi passport",
+   "Report the loss of the Saudi passport "
+  ]
+ },
+ "before": {
+  "top1": 0,
+  "top3": 0,
+  "wrong_confident": 2,
+  "gap_safe": 4,
+  "gap_total": 4,
+  "coverable": 13
+ },
+ "after": {
+  "top1": 11,
+  "top3": 13,
+  "wrong_confident": 2,
+  "gap_safe": 4,
+  "gap_total": 4,
+  "coverable": 13
+ },
+ "before_rows": [
+  {
+   "q": "How do I renew my iqama?",
+   "mode": "insufficient_evidence",
+   "top_score": 0.235,
+   "top3": [
+    [
+     "momah-33e52042f3",
+     "Renewing a Commercial License"
+    ],
+    [
+     "mofa-b51f2febd7",
+     "Passport Renewal"
+    ],
+    [
+     "momah-34e4a71713",
+     "Renewal of a Building Permit"
+    ]
+   ]
+  },
+  {
+   "q": "I lost my iqama. What should I do?",
+   "mode": "insufficient_evidence",
+   "top_score": 0.192,
+   "top3": [
+    [
+     "mofa-5e26783fdb",
+     "Residence Visa"
+    ],
+    [
+     "moj-e6986899ca",
+     "File statement of claim"
+    ],
+    [
+     "mofa-9bd9726442",
+     "Passports and Flight Data Registering"
+    ]
+   ]
+  },
+  {
+   "q": "How can I check my traffic violations?",
+   "mode": "insufficient_evidence",
+   "top_score": 0.214,
+   "top3": [
+    [
+     "zatca-34ea534520",
+     "Customs Violations Inquiry"
+    ],
+    [
+     "mc-5",
+     "Inquiring about Immediate Violations"
+    ],
+    [
+     "moj-d2b6dbda7f",
+     "Check disclaimer"
+    ]
+   ]
+  },
+  {
+   "q": "Can I object to a traffic violation?",
+   "mode": "related_services",
+   "top_score": 0.267,
+   "top3": [
+    [
+     "hrsd-f16e89fee1",
+     "Objection to inspection violations"
+    ],
+    [
+     "hrsd-0812ef3d76",
+     "Violation of labor regulations"
+    ],
+    [
+     "hrsd-bac83863d6",
+     "Pay Violations of work law"
+    ]
+   ]
+  },
+  {
+   "q": "How do I renew my driving licence?",
+   "mode": "related_services",
+   "top_score": 0.307,
+   "top3": [
+    [
+     "momah-33e52042f3",
+     "Renewing a Commercial License"
+    ],
+    [
+     "mc-49",
+     "Renew license"
+    ],
+    [
+     "momah-61cbf5eac1",
+     "Mobile Cart License Renewal"
+    ]
+   ]
+  },
+  {
+   "q": "I lost my driving licence.",
+   "mode": "possible_match",
+   "top_score": 0.311,
+   "top3": [
+    [
+     "mofa-a84ee95ae7",
+     "Transit of Goods Visa"
+    ],
+    [
+     "momah-e029556842",
+     "Mobile Cart License Modification"
+    ],
+    [
+     "momah-61cbf5eac1",
+     "Mobile Cart License Renewal"
+    ]
+   ]
+  },
+  {
+   "q": "How do I renew my Saudi passport?",
+   "mode": "grounded_answer",
+   "top_score": 0.481,
+   "top3": [
+    [
+     "mofa-b51f2febd7",
+     "Passport Renewal"
+    ],
+    [
+     "mofa-f6defbce4e",
+     "Diplomatic and Special Passport Renewal"
+    ],
+    [
+     "mofa-5c369c4d44",
+     "Passport Issuance"
+    ]
+   ]
+  },
+  {
+   "q": "I lost my passport.",
+   "mode": "possible_match",
+   "top_score": 0.368,
+   "top3": [
+    [
+     "mofa-b51f2febd7",
+     "Passport Renewal"
+    ],
+    [
+     "mofa-5c369c4d44",
+     "Passport Issuance"
+    ],
+    [
+     "mofa-f6defbce4e",
+     "Diplomatic and Special Passport Renewal"
+    ]
+   ]
+  },
+  {
+   "q": "How can I check my exit re-entry visa?",
+   "mode": "possible_match",
+   "top_score": 0.318,
+   "top3": [
+    [
+     "hrsd-eb59d99eac",
+     "Replacement Visa"
+    ],
+    [
+     "hrsd-eebf7562f2",
+     "Visa Cancellation"
+    ],
+    [
+     "mofa-f025ad5b0c",
+     "Personal Visit Visa"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أجدد الإقامة؟",
+   "mode": "insufficient_evidence",
+   "top_score": 0.234,
+   "top3": [
+    [
+     "mofa-b51f2febd7",
+     "Passport Renewal"
+    ],
+    [
+     "momah-33e52042f3",
+     "Renewing a Commercial License"
+    ],
+    [
+     "moj-3895a87ba5",
+     "Renew law practice license"
+    ]
+   ]
+  },
+  {
+   "q": "فقدت الإقامة وش أسوي؟",
+   "mode": "insufficient_evidence",
+   "top_score": 0.224,
+   "top3": [
+    [
+     "mofa-fd5af16a15",
+     "Premium Residency Visa"
+    ],
+    [
+     "mofa-5e26783fdb",
+     "Residence Visa"
+    ],
+    [
+     "zatca-ccf5000c75",
+     "Tax Residency Certificate Verification"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أستعلم عن المخالفات المرورية؟",
+   "mode": "possible_match",
+   "top_score": 0.374,
+   "top3": [
+    [
+     "hrsd-0fac372dd7",
+     "Paying labor law violations"
+    ],
+    [
+     "hrsd-0812ef3d76",
+     "Violation of labor regulations"
+    ],
+    [
+     "hrsd-03c5e6742b",
+     "Digital certificates service for traffic facilities for people with disabilities"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أعترض على مخالفة مرورية؟",
+   "mode": "related_services",
+   "top_score": 0.296,
+   "top3": [
+    [
+     "hrsd-f16e89fee1",
+     "Objection to inspection violations"
+    ],
+    [
+     "hrsd-03c5e6742b",
+     "Digital certificates service for traffic facilities for people with disabilities"
+    ],
+    [
+     "hrsd-bac83863d6",
+     "Pay Violations of work law"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أجدد رخصة القيادة؟",
+   "mode": "related_services",
+   "top_score": 0.286,
+   "top3": [
+    [
+     "momah-33e52042f3",
+     "Renewing a Commercial License"
+    ],
+    [
+     "momah-34e4a71713",
+     "Renewal of a Building Permit"
+    ],
+    [
+     "hrsd-9295ad795c",
+     "Request to renew a final license"
+    ]
+   ]
+  },
+  {
+   "q": "فقدت رخصة القيادة",
+   "mode": "insufficient_evidence",
+   "top_score": 0.155,
+   "top3": [
+    [
+     "momah-7286b71ab0",
+     "Cancellation of a Craft License"
+    ],
+    [
+     "momah-12afb9212c",
+     "Mobile Cart License Cancellation"
+    ],
+    [
+     "momah-2717fde38e",
+     "Mobile Cart License Issuance"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أجدد جواز السفر؟",
+   "mode": "grounded_answer",
+   "top_score": 0.551,
+   "top3": [
+    [
+     "mofa-b51f2febd7",
+     "Passport Renewal"
+    ],
+    [
+     "hrsd-2fdd234902",
+     "Issuance of a Travel Permit / Passport or Renewal of passport service for orphans"
+    ],
+    [
+     "mofa-e08d32b748",
+     "Extension of Return Visa"
+    ]
+   ]
+  },
+  {
+   "q": "فقدت جواز السفر وش أسوي؟",
+   "mode": "possible_match",
+   "top_score": 0.38,
+   "top3": [
+    [
+     "mofa-9bd9726442",
+     "Passports and Flight Data Registering"
+    ],
+    [
+     "mofa-5c369c4d44",
+     "Passport Issuance"
+    ],
+    [
+     "mofa-b51f2febd7",
+     "Passport Renewal"
+    ]
+   ]
+  }
+ ],
+ "after_rows": [
+  {
+   "q": "How do I renew my iqama?",
+   "mode": "possible_match",
+   "top_score": 0.437,
+   "top3": [
+    [
+     "absher-d267dc14f3",
+     "Renewal of resident identity (Iqama)"
+    ],
+    [
+     "absher-9fbc333ee8",
+     "Issuance of resident identity (Iqama)"
+    ],
+    [
+     "absher-c67c3fabce",
+     "Resident ID Renewal"
+    ]
+   ]
+  },
+  {
+   "q": "I lost my iqama. What should I do?",
+   "mode": "possible_match",
+   "top_score": 0.352,
+   "top3": [
+    [
+     "absher-9fbc333ee8",
+     "Issuance of resident identity (Iqama)"
+    ],
+    [
+     "absher-d267dc14f3",
+     "Renewal of resident identity (Iqama)"
+    ],
+    [
+     "mofa-5e26783fdb",
+     "Residence Visa"
+    ]
+   ]
+  },
+  {
+   "q": "How can I check my traffic violations?",
+   "mode": "possible_match",
+   "top_score": 0.415,
+   "top3": [
+    [
+     "absher-038955335f",
+     "Query Traffic Violations"
+    ],
+    [
+     "absher-2e1ac941a6",
+     "Query Traffic Violations for Visitors"
+    ],
+    [
+     "absher-9f59a2ff3d",
+     "Dispute Traffic Violations"
+    ]
+   ]
+  },
+  {
+   "q": "Can I object to a traffic violation?",
+   "mode": "possible_match",
+   "top_score": 0.432,
+   "top3": [
+    [
+     "absher-9f59a2ff3d",
+     "Dispute Traffic Violations"
+    ],
+    [
+     "absher-038955335f",
+     "Query Traffic Violations"
+    ],
+    [
+     "absher-2e1ac941a6",
+     "Query Traffic Violations for Visitors"
+    ]
+   ]
+  },
+  {
+   "q": "How do I renew my driving licence?",
+   "mode": "grounded_answer",
+   "top_score": 0.49,
+   "top3": [
+    [
+     "absher-9af219f690",
+     "Renew Driving License"
+    ],
+    [
+     "mc-49",
+     "Renew license"
+    ],
+    [
+     "momah-33e52042f3",
+     "Renewing a Commercial License"
+    ]
+   ]
+  },
+  {
+   "q": "I lost my driving licence.",
+   "mode": "possible_match",
+   "top_score": 0.488,
+   "top3": [
+    [
+     "absher-44c3ba7cb3",
+     "Driving license issuance"
+    ],
+    [
+     "absher-9af219f690",
+     "Renew Driving License"
+    ],
+    [
+     "absher-e15ba7cef5",
+     "Query Driving License Information"
+    ]
+   ]
+  },
+  {
+   "q": "How do I renew my Saudi passport?",
+   "mode": "grounded_answer",
+   "top_score": 0.467,
+   "top3": [
+    [
+     "mofa-b51f2febd7",
+     "Passport Renewal"
+    ],
+    [
+     "absher-80d8eeee01",
+     "Renewing the Saudi passport"
+    ],
+    [
+     "absher-a002e567a1",
+     "Minor Passport Renewal"
+    ]
+   ]
+  },
+  {
+   "q": "I lost my passport.",
+   "mode": "grounded_answer",
+   "top_score": 0.48,
+   "top3": [
+    [
+     "absher-0c28092a5d",
+     "Lost Passport Replacement Issuance"
+    ],
+    [
+     "absher-7d4fcc5243",
+     "Report the loss of the Saudi passport"
+    ],
+    [
+     "absher-bb7fae26da",
+     "Report the loss of the Saudi passport to family members"
+    ]
+   ]
+  },
+  {
+   "q": "How can I check my exit re-entry visa?",
+   "mode": "grounded_answer",
+   "top_score": 0.466,
+   "top3": [
+    [
+     "absher-39cfd56a46",
+     "Exit/Re-Entry Visa Status"
+    ],
+    [
+     "absher-ca5c36f2ff",
+     "Issuance of Exit/Re-Entry or Final Exit Visa"
+    ],
+    [
+     "absher-aa7a10ed44",
+     "Issuance of exit/re-entry visa"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أجدد الإقامة؟",
+   "mode": "possible_match",
+   "top_score": 0.324,
+   "top3": [
+    [
+     "absher-d267dc14f3",
+     "Renewal of resident identity (Iqama)"
+    ],
+    [
+     "mofa-b51f2febd7",
+     "Passport Renewal"
+    ],
+    [
+     "momah-33e52042f3",
+     "Renewing a Commercial License"
+    ]
+   ]
+  },
+  {
+   "q": "فقدت الإقامة وش أسوي؟",
+   "mode": "insufficient_evidence",
+   "top_score": 0.241,
+   "top3": [
+    [
+     "absher-0c28092a5d",
+     "Lost Passport Replacement Issuance"
+    ],
+    [
+     "absher-7d4fcc5243",
+     "Report the loss of the Saudi passport"
+    ],
+    [
+     "mofa-5e26783fdb",
+     "Residence Visa"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أستعلم عن المخالفات المرورية؟",
+   "mode": "possible_match",
+   "top_score": 0.427,
+   "top3": [
+    [
+     "absher-038955335f",
+     "Query Traffic Violations"
+    ],
+    [
+     "absher-2e1ac941a6",
+     "Query Traffic Violations for Visitors"
+    ],
+    [
+     "absher-d0681184a4",
+     "الاستعلام عن المخالفات قبل تسجيل الدخول"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أعترض على مخالفة مرورية؟",
+   "mode": "related_services",
+   "top_score": 0.292,
+   "top3": [
+    [
+     "absher-9f59a2ff3d",
+     "Dispute Traffic Violations"
+    ],
+    [
+     "hrsd-f16e89fee1",
+     "Objection to inspection violations"
+    ],
+    [
+     "absher-f0205e4732",
+     "Accident Objection/Waiver"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أجدد رخصة القيادة؟",
+   "mode": "possible_match",
+   "top_score": 0.373,
+   "top3": [
+    [
+     "absher-9af219f690",
+     "Renew Driving License"
+    ],
+    [
+     "absher-f36d776025",
+     "Renew Vehicle Registration"
+    ],
+    [
+     "momah-33e52042f3",
+     "Renewing a Commercial License"
+    ]
+   ]
+  },
+  {
+   "q": "فقدت رخصة القيادة",
+   "mode": "related_services",
+   "top_score": 0.286,
+   "top3": [
+    [
+     "absher-e15ba7cef5",
+     "Query Driving License Information"
+    ],
+    [
+     "absher-0c28092a5d",
+     "Lost Passport Replacement Issuance"
+    ],
+    [
+     "absher-68536becc6",
+     "Public Query Driving License"
+    ]
+   ]
+  },
+  {
+   "q": "كيف أجدد جواز السفر؟",
+   "mode": "grounded_answer",
+   "top_score": 0.536,
+   "top3": [
+    [
+     "mofa-b51f2febd7",
+     "Passport Renewal"
+    ],
+    [
+     "absher-80d8eeee01",
+     "Renewing the Saudi passport"
+    ],
+    [
+     "absher-d4697a679c",
+     "تجديد جواز السفر السعودي لأفراد الأسرة"
+    ]
+   ]
+  },
+  {
+   "q": "فقدت جواز السفر وش أسوي؟",
+   "mode": "possible_match",
+   "top_score": 0.386,
+   "top3": [
+    [
+     "absher-0c28092a5d",
+     "Lost Passport Replacement Issuance"
+    ],
+    [
+     "absher-7d4fcc5243",
+     "Report the loss of the Saudi passport"
+    ],
+    [
+     "absher-9b638446fc",
+     "معلومات جواز السفر"
+    ]
+   ]
+  }
+ ],
+ "benchmark_regression_test_split": {
+  "method": "same held-out test split, deterministic V4 engine (with action-conflict rule), same thresholds",
+  "before_799": {
+   "confident_precision": 0.933,
+   "unsupported_answered_or_possible": "4/21",
+   "unsupported_confident": "1/21",
+   "supported_correct": "79/120"
+  },
+  "after_910": {
+   "confident_precision": 0.93,
+   "unsupported_answered_or_possible": "8/21",
+   "unsupported_confident": "1/21",
+   "supported_correct": "78/120"
+  },
+  "retrieval_after_910": {
+   "top1": 0.767,
+   "top3": 0.867,
+   "mrr": 0.829
+  },
+  "retrieval_before_799": {
+   "top1": 0.775,
+   "top3": 0.892,
+   "mrr": 0.839
+  },
+  "note": "several benchmark questions labelled 'unsupported' (exit/re-entry for a worker, driving licence renewal, iqama renewal) are now covered by official Absher records; labels were not changed."
+ }
+}

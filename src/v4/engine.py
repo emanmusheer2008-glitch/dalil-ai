@@ -29,7 +29,7 @@ from src.answering.synthesizer import (
 from src.lite.engine import DalilLite, looks_like_followup
 from src.retrieval.retriever import SearchResult
 from src.utils.arabic import arabic_ratio
-from src.v4.actions import ACTIONS, rerank_hits
+from src.v4.actions import ACTIONS, query_actions, rerank_hits, service_actions
 from src.v4.gemini import GeminiClient, GeminiError
 from src.v4.redact import redact
 
@@ -155,6 +155,12 @@ class DalilV4:
     def _title(self, sid: str, lang: str) -> str:
         r = self.records[sid]
         return r.get("title", lang) or r.title_en or r.title_ar or ""
+
+    def action_conflict(self, query: str, service_id: str) -> bool:
+        """The question asks for a clearly different action (strong cue) than the service's own action."""
+        acts, strong = query_actions(query)
+        svc = service_actions(self.records[service_id])
+        return bool(strong and acts and svc and not (acts & svc))
 
     def retrieve(self, queries: list[str], action_query: str, extra_actions=None):
         merged = {}
@@ -302,6 +308,8 @@ class DalilV4:
         result = SearchResult(query, "v2", hits, 0.0)
         base = synthesize(result, self.records, self.lite.t_answer, self.lite.t_tentative,
                           t_related=self.lite.t_related, ui_lang=lang)
+        if base.status == "answered" and hits and self.action_conflict(q, hits[0].service_id):
+            base.status = "tentative"     # e.g. "lost X" vs an "issue X" service: show it, never as confident
         used_ctx = ctx if followup else None
         out = V4Answer(base, _mode_from_base(base), ai_enabled=self.ai_available, ai_error=err,
                        search_queries=queries, context_service_id=used_ctx, redactions=n_red, related=base.related)

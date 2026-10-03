@@ -22,6 +22,9 @@ class FakeGemini:
     def generate_json(self, system, prompt, max_tokens=1200):
         self.calls += 1
         self.prompts.append(prompt)
+        if "<evidence>" not in prompt and self.script and callable(self.script[0]):
+            # an understanding call the script did not plan for (corpus scores moved): neutral reply
+            return {"in_scope": True, "action": "none", "refers_to_previous_service": False, "search_queries": []}
         item = self.script.pop(0) if self.script else GeminiError("bad_json")
         if isinstance(item, Exception):
             raise item
@@ -309,6 +312,36 @@ def test_partial_answer_path(lite):
         d = ev["S1"]["description"][:150]
         return {"answerable": "partial", "direct_answer": {"text": d, "evidence": ["S1.description"]},
                 "sections": [{"key": "overview", "points": [{"text": d, "evidence": ["S1.description"]}]}]}
-    a = v4(lite, [make, make]).ask("How much does a family visit visa cost?")
+    a = v4(lite, [make, make]).ask("What is the fee for a family visit visa?")
     assert a.response_mode == "partial_answer"
     assert "fees" not in a.verified_fields and a.unverified[0].startswith("Dalil could not verify the current fee")
+
+
+# ---------------------------------------------------- V4.1 Absher coverage
+def test_absher_guide_parser():
+    from src.ingestion.absher_guide import parse_business_html, parse_service_js
+    js = '"title": {\n "en": `Renew Driving License`\n},\n "fee": {\n "en": `100 SR</br>`,\n},\n "duration": {\n "en": ``\n}'
+    d = parse_service_js(js)
+    assert d == {"title": "Renew Driving License", "fee": "100 SR"}          # empty fields stay absent
+    html = ('<div id="service-title"><span class="title-2 title-21">Issuance of final exit visa</span></div>'
+            '<div id="service-terms"><div class="jumbotron-body">• Valid passport<br/>• No violations</div></div>')
+    assert parse_business_html(html) == {"title": "Issuance of final exit visa",
+                                         "terms": "• Valid passport\n• No violations"}
+
+
+def test_absher_records_are_official_and_cited(lite):
+    absher = [r for r in lite.records.values() if r.service_id.startswith("absher-")]
+    if not absher:
+        pytest.skip("Absher records not in this knowledge base")
+    assert all(r.source_domain == "absher.sa" and r.source_sha256 for r in absher)
+    assert all((r.official_url_en or r.official_url_ar).startswith("https://www.absher.sa/") for r in absher)
+
+
+def test_action_conflict_is_never_confident(lite):
+    e = v4(lite, enabled=False)
+    if not any(r.service_id.startswith("absher-") for r in e.records.values()):
+        pytest.skip("Absher records not in this knowledge base")
+    a = e.ask("I lost my driving licence.")
+    assert a.response_mode != "grounded_answer"          # no lost-licence service: issuance is not an answer
+    a = e.ask("How do I renew my driving licence?")
+    assert "renew" in ((a.base.citations or a.base.related)[0].title or "").lower()

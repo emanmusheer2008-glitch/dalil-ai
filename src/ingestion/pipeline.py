@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 import pandas as pd
 
 from src import config
+from src.ingestion.absher_guide import AbsherGuideLoader
 from src.ingestion.base import BaseLoader
 from src.ingestion.csv_loader import LegacySeedCSVLoader
 from src.ingestion.document_loader import SavedPageLoader
@@ -36,6 +37,9 @@ def default_loaders() -> list[BaseLoader]:
         if "_" in cap.stem[len("dalil_v2_"):]:
             continue  # supplements (dalil_v2_<src>_<tag>.json) are merged by their main file's loader
         loaders.append(GenericServiceLoader(cap))
+    absher = raw / "official" / "absher" / "absher_guide_capture.json"
+    if absher.exists():
+        loaders.append(AbsherGuideLoader(absher))
     if (raw / "manual").exists():
         loaders.append(SavedPageLoader(raw / "manual"))
     if (raw / "open_data").exists():
@@ -46,11 +50,19 @@ def default_loaders() -> list[BaseLoader]:
     return loaders
 
 
-def run(loaders: list[BaseLoader] | None = None, write: bool = True) -> dict:
+def run(loaders: list[BaseLoader] | None = None, write: bool = True, extend: bool = False) -> dict:
+    """``extend=True``: keep the current knowledge base and ADD the given loaders' records (used when the
+    other sources' raw captures are not available locally, e.g. the gitignored v2 captures). Existing
+    records always win de-duplication; their quarantine entries and source stats are kept."""
     loaders = default_loaders() if loaders is None else loaders
-    accepted: list[ServiceRecord] = []
+    accepted: list[ServiceRecord] = list(load_services().values()) if extend else []
     quarantined: list[dict] = []
     per_source = {}
+    if extend:
+        if config.QUARANTINE_JSONL.exists():
+            quarantined = [json.loads(x) for x in config.QUARANTINE_JSONL.read_text(encoding="utf-8").splitlines() if x]
+        if config.BUILD_REPORT_JSON.exists():
+            per_source = json.loads(config.BUILD_REPORT_JSON.read_text(encoding="utf-8")).get("sources", {})
 
     for loader in loaders:
         recs = [normalize_record(r) for r in loader.load()]
@@ -62,9 +74,11 @@ def run(loaders: list[BaseLoader] | None = None, write: bool = True) -> dict:
                 ok += 1
             else:
                 quarantined.append({**rec.to_dict(), "_errors": res.errors, "_warnings": res.warnings})
-        per_source[loader.describe()] = {"loaded": len(recs), "accepted": ok,
+        per_source[loader.describe().replace(str(config.ROOT) + "/", "")] = {"loaded": len(recs), "accepted": ok,
                                          **getattr(loader, "page_stats", {})}
 
+    old_dupes = (json.loads(config.BUILD_REPORT_JSON.read_text(encoding="utf-8")).get("duplicates_removed", 0)
+                 if extend and config.BUILD_REPORT_JSON.exists() else 0)
     unique, dropped = find_duplicates(accepted)
     for rec, kept in dropped:
         quarantined.append({**rec.to_dict(), "_errors": [f"duplicate of {kept}"], "_warnings": []})
@@ -75,7 +89,7 @@ def run(loaders: list[BaseLoader] | None = None, write: bool = True) -> dict:
         "sources": per_source,
         "services_indexed": len(unique),
         "services_quarantined": len(quarantined),
-        "duplicates_removed": len(dropped),
+        "duplicates_removed": old_dupes + len(dropped),
         "agencies": sorted({r.agency_en or r.agency_ar for r in unique}),
         "page_labels_en": dict(Counter(t for r in unique for t in r.extra.get("page_tags", {}).get("en", []))),
         "source_domains": sorted({r.source_domain for r in unique}),
@@ -119,6 +133,11 @@ def load_services() -> dict[str, ServiceRecord]:
 
 
 if __name__ == "__main__":
-    rep = run()
+    import sys
+    if "--add-absher" in sys.argv:      # add the Absher guide to the existing KB (see absher_guide.py)
+        rep = run([AbsherGuideLoader(config.RAW_DIR / "official" / "absher" / "absher_guide_capture.json")],
+                  extend=True)
+    else:
+        rep = run()
     print(json.dumps({k: rep[k] for k in ("services_indexed", "services_quarantined", "duplicates_removed",
                                           "with_arabic", "with_english", "sources")}, ensure_ascii=False, indent=2))

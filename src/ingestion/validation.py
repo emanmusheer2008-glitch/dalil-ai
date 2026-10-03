@@ -21,7 +21,7 @@ from src.utils.arabic import arabic_ratio, normalize_for_matching
 
 # Domains accepted as official Saudi government sources. Extend deliberately.
 OFFICIAL_DOMAIN_SUFFIXES = (".gov.sa", ".edu.sa")
-OFFICIAL_EXACT_DOMAINS = {"my.gov.sa"}
+OFFICIAL_EXACT_DOMAINS = {"my.gov.sa", "absher.sa"}   # absher.sa: Ministry of Interior e-services platform
 
 
 @dataclass

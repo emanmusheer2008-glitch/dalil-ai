@@ -124,7 +124,8 @@ def test_ask_unsupported(client):
 
 
 def test_ask_related_services_are_links_only(client):
-    body = _ask(client, "How do I renew my iqama?")
+    # (was "How do I renew my iqama?" -- iqama renewal is covered since the V4.1 Absher records)
+    body = _ask(client, "How do I register my car with Najm insurance?")
     if body["response_type"] != "related_services":
         pytest.skip(f"engine returned {body['response_type']} for this question")
     assert body["sections"] == [] and body["sources"] == []
